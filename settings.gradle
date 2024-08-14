@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-include 'neo4j', 'neo4j_legacy', 'tinkerpop'
+include /*'neo4j',*/ 'tinkerpop'

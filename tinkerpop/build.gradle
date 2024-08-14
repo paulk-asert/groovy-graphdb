@@ -33,5 +33,5 @@ dependencies {
 }
 
 application {
-    mainClass = 'TinkerAthletes'
+    mainClass = 'TinkerSwimmers'
 }
