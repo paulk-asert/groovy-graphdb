@@ -34,7 +34,7 @@ def run() {
     km = insertSwimmer(g, 'Kylie Masse', '🇨🇦')
     swim2 = insertSwim(g, 'Tokyo 2021', 'Heat 4', 58.17, 'First', km)
     swim2.addEdge('supercedes', swim1)
-    swim3 = insertSwim(g, 'Tokyo 2021', 'Final', 58.17, '🥈', km)
+    swim3 = insertSwim(g, 'Tokyo 2021', 'Final', 57.72, '🥈', km)
 
     rs = insertSwimmer(g, 'Regan Smith', '🇺🇸')
     swim4 = insertSwim(g, 'Tokyo 2021', 'Heat 5', 57.96, 'First', rs)

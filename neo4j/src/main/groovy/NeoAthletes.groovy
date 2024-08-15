@@ -3,14 +3,12 @@ import org.neo4j.graphdb.*
 import org.neo4j.graphdb.traversal.Evaluators
 import org.neo4j.graphdb.traversal.Uniqueness
 
-import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
-//import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal
 
 enum AthleteRelationships implements RelationshipType { ran, supercedes }
 import static AthleteRelationships.*
 
-var db = 'C:/tmp/athletesDB' as File
+var db = '/tmp/athletesDB' as File
 var managementService = new DatabaseManagementServiceBuilder(db.toPath()).build()
 var graphDb = managementService.database(DEFAULT_DATABASE_NAME)
 
@@ -110,8 +108,8 @@ def run() {
         marathon1.supercedes(marathon2a)
         marathon4b.supercedes(marathon4a)
 
-        def info = { m -> "$m.where $m.when:" }
-        println "World records following ${info(marathon3)}"
+        def info = { m -> "$m.where $m.when" }
+        println "World records following ${info(marathon3)}:"
 
         for (Path p in tx.traversalDescription()
             .breadthFirst()
@@ -122,19 +120,5 @@ def run() {
             println p.endNode().with(info)
         }
 
-/*
-        results = []
-        def emitAll = { true }
-        def forever = { true }
-        def berlin98 = { it.where == 'Berlin' && it.when.startsWith('1998') }
-        g.V.filter(berlin98).in('supercedes').
-            loop(1, forever, emitAll).fill(results)
-        println 'World records after Berlin 1998: ' + pretty(results)
-      //    def writer = new GraphMLWriter(g)
-      //    def out = new FileOutputStream("c:/temp/athletes.graphml")
-      //    writer.outputGraph(out)
-      //    writer.setNormalize(true)
-      //    out.close()
-/* */
     }
 }
