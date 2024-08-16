@@ -7,20 +7,21 @@ import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAM
 
 enum SwimmingRelationships implements RelationshipType { swam, supercedes }
 import static SwimmingRelationships.*
+import static org.neo4j.graphdb.Label.label
 
 var db = '/tmp/athletesDB' as File
 var managementService = new DatabaseManagementServiceBuilder(db.toPath()).build()
 var graphDb = managementService.database(DEFAULT_DATABASE_NAME)
 
 static insertSwimmer(Transaction tx, name, country) {
-    def sr = tx.createNode()
+    def sr = tx.createNode(label('swimmer'))
     sr.setProperty('name', name)
     sr.setProperty('country', country)
     sr
 }
 
 static insertSwim(Transaction tx, where, event, time, result, swimmer) {
-    def sm = tx.createNode()
+    def sm = tx.createNode(label('swim'))
     sm.setProperty('result', result)
     sm.setProperty('event', event)
     sm.setProperty('where', where)
@@ -47,11 +48,11 @@ def run() {
 
     try (Transaction tx = graphDb.beginTx()) {
 
-        es = tx.createNode()
+        es = tx.createNode(label('swimmer'))
         es.setProperty('name', 'Emily Seebohm')
         es.setProperty('country', '🇦🇺')
 
-        swim1 = tx.createNode()
+        swim1 = tx.createNode(label('swim'))
         swim1.setProperty('event', 'Heat 4')
         swim1.setProperty('where', 'London 2012')
         swim1.setProperty('result', 'First')
@@ -65,11 +66,11 @@ def run() {
         def time = swim1.getProperty('time')
         println "$name from $country swam a time of $time in $event at the $where Olympics"
 
-        km = tx.createNode()
+        km = tx.createNode(label('swimmer'))
         km.name = 'Kylie Masse'
         km.country = '🇨🇦'
 
-        swim2 = tx.createNode()
+        swim2 = tx.createNode(label('swim'))
         swim2.time = 58.17d
         swim2.result = 'First'
         swim2.event = 'Heat 4'
@@ -135,5 +136,25 @@ def run() {
             .traverse(swim1)) {
             println p.endNode().with(info)
         }
+
+        assert tx.execute('''
+        MATCH (s:swim WHERE s.event STARTS WITH 'Heat')
+        WITH s.where as where
+        WITH DISTINCT where
+        RETURN where
+        ''')*.where == ['London 2012', 'Tokyo 2021']
+
+        assert tx.execute('''
+        MATCH (s1:swim {event: 'Final'})-[supercedes]->(s2:swim)
+        RETURN s1.time AS time
+        ''')*.time == [57.47d, 57.33d]
+
+        tx.execute('''
+        MATCH (s1:swim)-[supercedes]->{1,}(s2:swim { where: $where })
+        RETURN s1
+        ''', [where: swim1.where])*.s1.each{ s ->
+            println "$s.where $s.event"
+        }
+
     }
 }
