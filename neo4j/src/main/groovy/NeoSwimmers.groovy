@@ -5,7 +5,10 @@ import org.neo4j.graphdb.traversal.Uniqueness
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 
-enum SwimmingRelationships implements RelationshipType { swam, supercedes }
+enum SwimmingRelationships implements RelationshipType {
+    swam, supercedes
+}
+
 import static SwimmingRelationships.*
 import static org.neo4j.graphdb.Label.label
 
@@ -14,14 +17,14 @@ var managementService = new DatabaseManagementServiceBuilder(db.toPath()).build(
 var graphDb = managementService.database(DEFAULT_DATABASE_NAME)
 
 static insertSwimmer(Transaction tx, name, country) {
-    def sr = tx.createNode(label('swimmer'))
+    var sr = tx.createNode(label('swimmer'))
     sr.setProperty('name', name)
     sr.setProperty('country', country)
     sr
 }
 
 static insertSwim(Transaction tx, where, event, time, result, swimmer) {
-    def sm = tx.createNode(label('swim'))
+    var sm = tx.createNode(label('swim'))
     sm.setProperty('result', result)
     sm.setProperty('event', event)
     sm.setProperty('where', where)
@@ -59,11 +62,11 @@ def run() {
         swim1.setProperty('time', 58.23d)
         swim1.createRelationshipTo(es, swam)
 
-        def name = es.getProperty('name')
-        def country = es.getProperty('country')
-        def where = swim1.getProperty('where')
-        def event = swim1.getProperty('event')
-        def time = swim1.getProperty('time')
+        var name = es.getProperty('name')
+        var country = es.getProperty('country')
+        var where = swim1.getProperty('where')
+        var event = swim1.getProperty('event')
+        var time = swim1.getProperty('time')
         println "$name from $country swam a time of $time in $event at the $where Olympics"
 
         km = tx.createNode(label('swimmer'))
@@ -106,26 +109,26 @@ def run() {
         kb = insertSwimmer(tx, 'Katharine Berkoff', '🇺🇸')
         swim12 = insertSwim(tx, 'Paris 2024', 'Final', 57.98d, '🥉', kb)
 
-        def swimmers = [es, km, rs, kmk, kb]
-        def successInParis = swimmers.findAll { swimmer ->
+        var swimmers = [es, km, rs, kmk, kb]
+        var successInParis = swimmers.findAll { swimmer ->
             swimmer.getRelationships(swam).any { run ->
                 run.getOtherNode(swimmer).where == 'Paris 2024'
             }
         }
         assert successInParis*.country.unique() == ['🇺🇸', '🇦🇺']
 
-        def swims = [swim1, swim2, swim3, swim4, swim5, swim6, swim7, swim8, swim9, swim10, swim11, swim12]
-        def recordSetInHeat = swims.findAll {  swim ->
+        var swims = [swim1, swim2, swim3, swim4, swim5, swim6, swim7, swim8, swim9, swim10, swim11, swim12]
+        var recordSetInHeat = swims.findAll { swim ->
             swim.event.startsWith('Heat')
         }*.where
         assert recordSetInHeat.unique() == ['London 2012', 'Tokyo 2021']
 
-        def recordTimesInFinals = swims.findAll {  swim ->
+        var recordTimesInFinals = swims.findAll { swim ->
             swim.event == 'Final' && swim.hasRelationship(supercedes)
         }*.time
         assert recordTimesInFinals == [57.47d, 57.33d]
 
-        def info = { s -> "$s.where $s.event" }
+        var info = { s -> "$s.where $s.event" }
         println "Olympic records following ${info(swim1)}:"
 
         for (Path p in tx.traversalDescription()
@@ -152,7 +155,7 @@ def run() {
         tx.execute('''
         MATCH (s1:swim)-[supercedes]->{1,}(s2:swim { where: $where })
         RETURN s1
-        ''', [where: swim1.where])*.s1.each{ s ->
+        ''', [where: swim1.where])*.s1.each { s ->
             println "$s.where $s.event"
         }
 

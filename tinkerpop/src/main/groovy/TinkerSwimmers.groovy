@@ -27,8 +27,8 @@ def run() {
     swim1 = g.addV('swim').property(where: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
     es.addEdge('swam', swim1)
 
-    def (name, country) = ['name', 'country'].collect{g.V(es).values(it)[0] }
-    def (where, event, time) = ['where', 'event', 'time'].collect{ g.V(swim1).values(it)[0] }
+    def (name, country) = ['name', 'country'].collect { g.V(es).values(it)[0] }
+    def (where, event, time) = ['where', 'event', 'time'].collect { g.V(swim1).values(it)[0] }
     println "$name from $country swam a time of $time in $event at the $where Olympics"
 
     km = insertSwimmer(g, 'Kylie Masse', '🇨🇦')
@@ -62,7 +62,7 @@ def run() {
     assert successInParis == ['🇺🇸', '🇦🇺'] as Set
 
     def recordSetInHeat = g.V().hasLabel('swim')
-        .filter{ it.get().property('event').value().startsWith('Heat') }
+        .filter { it.get().property('event').value().startsWith('Heat') }
         .values('where').toSet()
     assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set
 
@@ -71,7 +71,7 @@ def run() {
     assert recordTimesInFinals == [57.47, 57.33] as Set
 
     println "Olympic records after ${g.V(swim1).values('where', 'event').toList().join(' ')}: "
-    println g.V(swim1).repeat(in('supercedes')).as('sw').emit()
+    println g.V(swim1).repeat(in ('supercedes')).as('sw').emit()
         .values('where').concat(' ')
         .concat(select('sw').values('event')).toList().join('\n')
 
