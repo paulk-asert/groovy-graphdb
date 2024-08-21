@@ -1,6 +1,22 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import org.apache.tinkerpop.gremlin.process.traversal.TraversalSource
 import org.apache.tinkerpop.gremlin.structure.Vertex
-import org.apache.tinkerpop.gremlin.structure.io.graphml.GraphMLWriter
+//import org.apache.tinkerpop.gremlin.structure.io.graphml.GraphMLWriter
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph
 
 import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal
@@ -27,8 +43,9 @@ def run() {
     marathon1 = g.addV('marathon').property(distance: 42195, when: '2003-09-28', where: 'Berlin', time: 2 * 60 * 60 + 4 * 60 + 55).next()
     athlete1.addEdge('won', marathon1)
 
-    def (first, last) = ['first', 'last'].collect{g.V(athlete1).values(it)[0] }
-    def (where, when) = ['where', 'when'].collect{ g.V(marathon1).values(it)[0] }
+    // show two different ways to extract properties:
+    var (first, last) = ['first', 'last'].collect{athlete1.property(it).value() }
+    var (where, when) = ['where', 'when'].collect{ g.V(marathon1).values(it)[0] }
     println "$first $last won the $where marathon on $when"
 
     athlete2 = insertAthlete(g, 'Khalid', 'Khannouchi', '1971-12-22')
@@ -42,7 +59,7 @@ def run() {
     marathon4a = insertRun(g, 2, 17, 18, 'Chicago', '2002-10-13', athlete4)
     marathon4b = insertRun(g, 2, 15, 25, 'London', '2003-04-13', athlete4)
 
-    def wonInLondon = g.V().out('won').has('where', 'London').in()
+    var wonInLondon = g.V().out('won').has('where', 'London').in()
         .values('last').toSet()
     assert wonInLondon == ['Khannouchi', 'Radcliffe'] as Set
 
@@ -51,12 +68,12 @@ def run() {
     marathon1.addEdge('supercedes', marathon2a)
     marathon4b.addEdge('supercedes', marathon4a)
 
-    def bornAfter1970 = g.V().hasLabel('athlete')
+    var bornAfter1970 = g.V().hasLabel('athlete')
         .filter{ it.get().property('dob').value()[0..3] > '1970' }
         .values('last').toSet()
     assert bornAfter1970 == ['Radcliffe', 'Khannouchi'] as Set
 
-    def londonRecordDates = g.V().has('where', 'London').as('m').out('supercedes')
+    var londonRecordDates = g.V().has('where', 'London').as('m').out('supercedes')
         .select('m').values('when').toSet()
     assert londonRecordDates == ['2002-04-14', '2003-04-13'] as Set
 
@@ -65,7 +82,7 @@ def run() {
         .values('where').concat(' ')
         .concat(select('m').values('when')).toList()
 
-//    def writer = GraphMLWriter.build().normalize(true).create()
+//    var writer = GraphMLWriter.build().normalize(true).create()
 //    new File("/tmp/athletes.graphml").withOutputStream { os ->
 //        writer.writeGraph(os, graph)
 //    }

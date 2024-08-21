@@ -70,14 +70,14 @@ Sql.withInstance(DB_URL, USER, PASS, 'org.postgresql.jdbc.PgConnection') { sql -
 
     assert sql.rows('''
         SELECT * from cypher('swimming_graph', $$
-        MATCH (s1:swim {event: 'Final'})-[supercedes]->(s2:swim)
+        MATCH (s1:swim {event: 'Final'})-[:supercedes]->(s2:swim)
         RETURN s1
         $$) AS (a agtype)
     ''').a*.map*.get('properties')*.time == [57.47, 57.33]
 
     sql.eachRow('''
         SELECT * from cypher('swimming_graph', $$
-        MATCH (s1:swim)-[supercedes]->(swim1)
+        MATCH (s1:swim)-[:supercedes]->(swim1)
         RETURN s1
         $$) AS (a agtype)
     ''') {

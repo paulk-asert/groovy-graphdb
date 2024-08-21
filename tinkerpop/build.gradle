@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import static FileUtil.baseNames
+
 plugins {
-    id 'java-library'
     id 'groovy'
-    id 'application'
 }
 
 ext {
@@ -25,13 +25,28 @@ ext {
 }
 
 dependencies {
-    implementation "org.apache.tinkerpop:gremlin-core:$gremlinVersion"
+    implementation("org.apache.tinkerpop:gremlin-groovy:$gremlinVersion") {
+        exclude group: 'org.apache.groovy'
+    }
     implementation "org.apache.tinkerpop:gremlin-driver:$gremlinVersion"
     implementation "org.apache.tinkerpop:tinkergraph-gremlin:$gremlinVersion"
     implementation "org.slf4j:slf4j-simple:2.0.13"
     implementation "org.apache.groovy:groovy:$groovyVersion"
 }
 
-application {
-    mainClass = 'TinkerSwimmers'
+def runall = tasks.register('runAll') {
+    group 'Application'
+}
+
+baseNames(sourceSets.main.allSource.files, []).each { name ->
+    def subtask = tasks.register("run$name", JavaExec) {
+        dependsOn compileGroovy
+        group 'Application'
+        description "Run ${name}.groovy as a JVM application/Groovy script"
+        classpath = sourceSets.main.runtimeClasspath
+        mainClass = name
+    }
+    runall.configure {
+        dependsOn subtask
+    }
 }

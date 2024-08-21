@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
+import org.apache.tinkerpop.gremlin.groovy.loaders.SugarLoader
 import org.apache.tinkerpop.gremlin.process.traversal.TraversalSource
-
-//import org.apache.tinkerpop.gremlin.structure.io.graphml.GraphMLWriter
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph
 
 import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal
 import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.in
 import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.select
 
+SugarLoader.load()
+
 def insertSwimmer(TraversalSource g, name, country) {
     g.addV('swimmer').property(name: name, country: country).next()
 }
 
 def insertSwim(TraversalSource g, at, event, time, result, swimmer) {
-    var swim = g.addV('swim').property(at: at, event: event, time: time, result: result).next()
-    swimmer.addEdge('swam', swim)
-    swim
+    g.addV('swim').property(at: at, event: event, time: time, result: result).next().tap { swim ->
+        swimmer.addEdge('swam', swim)
+    }
 }
 
 var graph = TinkerGraph.open()
@@ -40,9 +41,7 @@ var es = g.addV('swimmer').property(name: 'Emily Seebohm', country: '🇦🇺').
 swim1 = g.addV('swim').property(at: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
 es.addEdge('swam', swim1)
 
-var (name, country) = ['name', 'country'].collect { es.property(it).value() }
-var (at, event, time) = ['at', 'event', 'time'].collect { swim1.property(it).value() }
-println "$name from $country swam a time of $time in $event at the $at Olympics"
+println "$es.name from $es.country swam a time of $swim1.time in $swim1.event at the $swim1.at Olympics"
 
 var km = insertSwimmer(g, 'Kylie Masse', '🇨🇦')
 var swim2 = insertSwim(g, 'Tokyo 2021', 'Heat 4', 58.17, 'First', km)
@@ -70,25 +69,15 @@ swim8.addEdge('supercedes', swim11)
 var kb = insertSwimmer(g, 'Katharine Berkoff', '🇺🇸')
 var swim12 = insertSwim(g, 'Paris 2024', 'Final', 57.98, '🥉', kb)
 
-var successInParis = g.V().out('swam').has('at', 'Paris 2024').in()
-    .values('country').toSet()
+var successInParis = g.V.out('swam').has('at', 'Paris 2024').in.country.toSet
 assert successInParis == ['🇺🇸', '🇦🇺'] as Set
 
-var recordSetInHeat = g.V().hasLabel('swim')
-    .filter { it.get().property('event').value().startsWith('Heat') }
-    .values('at').toSet()
+var recordSetInHeat = g.V.hasLabel('swim').filter { it.event.startsWith('Heat') }.at.toSet
 assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set
 
-var recordTimesInFinals = g.V().has('event', 'Final').as('ev').out('supercedes')
-    .select('ev').values('time').toSet()
+var recordTimesInFinals = g.V.has('event', 'Final').as('ev').out('supercedes').select('ev').time.toSet
 assert recordTimesInFinals == [57.47, 57.33] as Set
 
 println "Olympic records after ${g.V(swim1).values('at', 'event').toList().join(' ')}: "
-println g.V(swim1).repeat(in('supercedes')).as('sw').emit()
-    .values('at').concat(' ')
-    .concat(select('sw').values('event')).toList().join('\n')
-
-//    var writer = GraphMLWriter.build().normalize(true).create()
-//    new File("/tmp/swimmers.graphml").withOutputStream { os ->
-//        writer.writeGraph(os, graph)
-//    }
+println g.V(swim1).repeat(in('supercedes')).as('sw').emit
+    .at.concat(' ').concat(select('sw').event).toList.join('\n')

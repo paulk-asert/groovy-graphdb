@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import static FileUtil.baseNames
+
 plugins {
     id 'java-library'
     id 'groovy'
@@ -42,9 +44,6 @@ dependencies {
     implementation "org.apache.groovy:groovy:$groovyVersion"
 }
 
-//tasks.named('test') {
-//    useJUnitPlatform()
-//}
 def runall = tasks.register('runAll') {
     group 'Application'
 }
@@ -59,17 +58,4 @@ baseNames(sourceSets.main.allSource.files, []).each { name ->
     runall.configure {
         dependsOn subtask
     }
-}
-
-static List<String> baseNames(File subdir, List<String> exclusions = [], String ext = '.groovy') {
-    baseNames(subdir.listFiles().toList(), exclusions, [ext])
-}
-
-static List<String> baseNames(Collection<File> files, List<String> exclusions = [], List<String> exts = ['.groovy']) {
-    exts.collect { ext ->
-        files*.name
-            .findAll { it.endsWith(ext) }
-            .collect { it - ext }
-            .findAll { !(it in exclusions) && !it.endsWith('Util') }
-    }.sum()
 }
