@@ -12,7 +12,7 @@ enum SwimmingRelationships implements RelationshipType {
 import static SwimmingRelationships.*
 import static org.neo4j.graphdb.Label.label
 
-var db = '/tmp/athletesDB' as File
+var db = '/tmp/swimmersDB' as File
 var managementService = new DatabaseManagementServiceBuilder(db.toPath()).build()
 var graphDb = managementService.database(DEFAULT_DATABASE_NAME)
 
@@ -23,11 +23,11 @@ static insertSwimmer(Transaction tx, name, country) {
     sr
 }
 
-static insertSwim(Transaction tx, where, event, time, result, swimmer) {
+static insertSwim(Transaction tx, at, event, time, result, swimmer) {
     var sm = tx.createNode(label('swim'))
     sm.setProperty('result', result)
     sm.setProperty('event', event)
-    sm.setProperty('where', where)
+    sm.setProperty('at', at)
     sm.setProperty('time', time)
     swimmer.createRelationshipTo(sm, swam)
     sm
@@ -57,17 +57,17 @@ def run() {
 
         swim1 = tx.createNode(label('swim'))
         swim1.setProperty('event', 'Heat 4')
-        swim1.setProperty('where', 'London 2012')
+        swim1.setProperty('at', 'London 2012')
         swim1.setProperty('result', 'First')
         swim1.setProperty('time', 58.23d)
         es.createRelationshipTo(swim1, swam)
 
         var name = es.getProperty('name')
         var country = es.getProperty('country')
-        var where = swim1.getProperty('where')
+        var at = swim1.getProperty('at')
         var event = swim1.getProperty('event')
         var time = swim1.getProperty('time')
-        println "$name from $country swam a time of $time in $event at the $where Olympics"
+        println "$name from $country swam a time of $time in $event at the $at Olympics"
 
         km = tx.createNode(label('swimmer'))
         km.name = 'Kylie Masse'
@@ -77,7 +77,7 @@ def run() {
         swim2.time = 58.17d
         swim2.result = 'First'
         swim2.event = 'Heat 4'
-        swim2.where = 'Tokyo 2021'
+        swim2.at = 'Tokyo 2021'
         km.swam(swim2)
         swim2.supercedes(swim1)
 
@@ -85,7 +85,7 @@ def run() {
         swim3.time = 57.72d
         swim3.result = '🥈'
         swim3.event = 'Final'
-        swim3.where = 'Tokyo 2021'
+        swim3.at = 'Tokyo 2021'
         km.swam(swim3)
 
         rs = insertSwimmer(tx, 'Regan Smith', '🇺🇸')
@@ -112,7 +112,7 @@ def run() {
         var swimmers = [es, km, rs, kmk, kb]
         var successInParis = swimmers.findAll { swimmer ->
             swimmer.getRelationships(swam).any { run ->
-                run.getOtherNode(swimmer).where == 'Paris 2024'
+                run.getOtherNode(swimmer).at == 'Paris 2024'
             }
         }
         assert successInParis*.country.unique() == ['🇺🇸', '🇦🇺']
@@ -120,7 +120,7 @@ def run() {
         var swims = [swim1, swim2, swim3, swim4, swim5, swim6, swim7, swim8, swim9, swim10, swim11, swim12]
         var recordSetInHeat = swims.findAll { swim ->
             swim.event.startsWith('Heat')
-        }*.where
+        }*.at
         assert recordSetInHeat.unique() == ['London 2012', 'Tokyo 2021']
 
         var recordTimesInFinals = swims.findAll { swim ->
@@ -128,7 +128,7 @@ def run() {
         }*.time
         assert recordTimesInFinals == [57.47d, 57.33d]
 
-        var info = { s -> "$s.where $s.event" }
+        var info = { s -> "$s.at $s.event" }
         println "Olympic records following ${info(swim1)}:"
 
         for (Path p in tx.traversalDescription()
@@ -142,10 +142,10 @@ def run() {
 
         assert tx.execute('''
         MATCH (s:swim WHERE s.event STARTS WITH 'Heat')
-        WITH s.where as where
-        WITH DISTINCT where
-        RETURN where
-        ''')*.where == ['London 2012', 'Tokyo 2021']
+        WITH s.at as at
+        WITH DISTINCT at
+        RETURN at
+        ''')*.at == ['London 2012', 'Tokyo 2021']
 
         assert tx.execute('''
         MATCH (s1:swim {event: 'Final'})-[:supercedes]->(s2:swim)
@@ -153,15 +153,15 @@ def run() {
         ''')*.time == [57.47d, 57.33d]
 
         tx.execute('''
-        MATCH (s1:swim)-[:supercedes]->{1,}(s2:swim { where: $where })
+        MATCH (s1:swim)-[:supercedes]->{1,}(s2:swim { at: $at })
         RETURN s1
-        ''', [where: swim1.where])*.s1.each { s ->
-            println "$s.where $s.event"
+        ''', [at: swim1.at])*.s1.each { s ->
+            println "$s.at $s.event"
         }
 
         assert tx.execute('''
         MATCH (sr1:swimmer)-[:swam]->(sm1:swim {event: 'Final'}), (sm2:swim {event: 'Final'})-[:supercedes]->(sm3:swim)
-        WHERE sm1.where = sm2.where AND sm1 <> sm2 AND sm1.time < sm3.time
+        WHERE sm1.at = sm2.at AND sm1 <> sm2 AND sm1.time < sm3.time
         RETURN sr1.name as name
         ''')*.name == ['Kylie Masse']
 
