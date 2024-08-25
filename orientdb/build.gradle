@@ -1,0 +1,49 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import static FileUtils.baseNames
+
+plugins {
+    id 'java-library'
+    id 'groovy'
+}
+
+ext {
+    neoVersion = '5.22.0'
+    gremlinVersion = '3.7.2'
+}
+
+dependencies {
+    implementation "org.apache.groovy:groovy:$groovyVersion"
+    implementation "com.orientechnologies:orientdb-client:3.2.32"
+}
+
+def runall = tasks.register('runAll') {
+    group 'Application'
+}
+
+baseNames(sourceSets.main.allSource.files, []).each { name ->
+    def subtask = tasks.register("run$name", JavaExec) {
+        dependsOn compileGroovy
+        group 'Application'
+        description "Run ${name}.groovy as a JVM application/Groovy script"
+        classpath = sourceSets.main.runtimeClasspath
+        mainClass = name
+    }
+    runall.configure {
+        dependsOn subtask
+    }
+}
