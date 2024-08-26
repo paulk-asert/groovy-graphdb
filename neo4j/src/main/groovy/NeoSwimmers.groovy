@@ -6,7 +6,7 @@ import org.neo4j.graphdb.traversal.Uniqueness
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 
 enum SwimmingRelationships implements RelationshipType {
-    swam, supercedes, runnerup
+    swam, supersedes, runnerup
 }
 
 import static SwimmingRelationships.*
@@ -79,7 +79,7 @@ def run() {
         swim2.event = 'Heat 4'
         swim2.at = 'Tokyo 2021'
         km.swam(swim2)
-        swim2.supercedes(swim1)
+        swim2.supersedes(swim1)
 
         swim3 = tx.createNode(label('swim'))
         swim3.time = 57.72d
@@ -90,7 +90,7 @@ def run() {
 
         rs = insertSwimmer(tx, 'Regan Smith', '🇺🇸')
         swim4 = insertSwim(tx, 'Tokyo 2021', 'Heat 5', 57.96d, 'First', rs)
-        swim4.supercedes(swim2)
+        swim4.supersedes(swim2)
         swim5 = insertSwim(tx, 'Tokyo 2021', 'Semifinal 1', 57.86d, 'First', rs)
         swim6 = insertSwim(tx, 'Tokyo 2021', 'Final', 58.05d, '🥉', rs)
         swim7 = insertSwim(tx, 'Paris 2024', 'Final', 57.66d, '🥈', rs)
@@ -98,13 +98,13 @@ def run() {
 
         kmk = insertSwimmer(tx, 'Kaylie McKeown', '🇦🇺')
         swim9 = insertSwim(tx, 'Tokyo 2021', 'Heat 6', 57.88d, 'First', kmk)
-        swim9.supercedes(swim4)
-        swim5.supercedes(swim9)
+        swim9.supersedes(swim4)
+        swim5.supersedes(swim9)
         swim10 = insertSwim(tx, 'Tokyo 2021', 'Final', 57.47d, '🥇', kmk)
-        swim10.supercedes(swim5)
+        swim10.supersedes(swim5)
         swim11 = insertSwim(tx, 'Paris 2024', 'Final', 57.33d, '🥇', kmk)
-        swim11.supercedes(swim10)
-        swim8.supercedes(swim11)
+        swim11.supersedes(swim10)
+        swim8.supersedes(swim11)
 
         kb = insertSwimmer(tx, 'Katharine Berkoff', '🇺🇸')
         swim12 = insertSwim(tx, 'Paris 2024', 'Final', 57.98d, '🥉', kb)
@@ -124,7 +124,7 @@ def run() {
         assert recordSetInHeat.unique() == ['London 2012', 'Tokyo 2021']
 
         var recordTimesInFinals = swims.findAll { swim ->
-            swim.event == 'Final' && swim.hasRelationship(supercedes)
+            swim.event == 'Final' && swim.hasRelationship(supersedes)
         }*.time
         assert recordTimesInFinals == [57.47d, 57.33d]
 
@@ -133,7 +133,7 @@ def run() {
 
         for (Path p in tx.traversalDescription()
             .breadthFirst()
-            .relationships(supercedes)
+            .relationships(supersedes)
             .evaluator(Evaluators.fromDepth(1))
             .uniqueness(Uniqueness.NONE)
             .traverse(swim1)) {
@@ -148,19 +148,19 @@ def run() {
         ''')*.at == ['London 2012', 'Tokyo 2021']
 
         assert tx.execute('''
-        MATCH (s1:swim {event: 'Final'})-[:supercedes]->(s2:swim)
+        MATCH (s1:swim {event: 'Final'})-[:supersedes]->(s2:swim)
         RETURN s1.time AS time
         ''')*.time == [57.47d, 57.33d]
 
         tx.execute('''
-        MATCH (s1:swim)-[:supercedes]->{1,}(s2:swim { at: $at })
+        MATCH (s1:swim)-[:supersedes]->{1,}(s2:swim { at: $at })
         RETURN s1
         ''', [at: swim1.at])*.s1.each { s ->
             println "$s.at $s.event"
         }
 
         assert tx.execute('''
-        MATCH (sr1:swimmer)-[:swam]->(sm1:swim {event: 'Final'}), (sm2:swim {event: 'Final'})-[:supercedes]->(sm3:swim)
+        MATCH (sr1:swimmer)-[:swam]->(sm1:swim {event: 'Final'}), (sm2:swim {event: 'Final'})-[:supersedes]->(sm3:swim)
         WHERE sm1.at = sm2.at AND sm1 <> sm2 AND sm1.time < sm3.time
         RETURN sr1.name as name
         ''')*.name == ['Kylie Masse']
@@ -171,7 +171,7 @@ def run() {
         swim7.runnerup(swim11)
 
         assert tx.execute('''
-        MATCH (sr1:swimmer)-[:swam]->(sm1:swim {event: 'Final'})-[:runnerup]->{1,2}(sm2:swim {event: 'Final'})-[:supercedes]->(sm3:swim)
+        MATCH (sr1:swimmer)-[:swam]->(sm1:swim {event: 'Final'})-[:runnerup]->{1,2}(sm2:swim {event: 'Final'})-[:supersedes]->(sm3:swim)
         WHERE sm1.time < sm3.time
         RETURN sr1.name as name
         ''')*.name == ['Kylie Masse']

@@ -1,72 +1,73 @@
-import org.apache.tinkerpop.gremlin.process.traversal.TraversalSource
-import org.apache.tinkerpop.gremlin.structure.Vertex
-import org.apache.tinkerpop.gremlin.structure.io.graphml.GraphMLWriter
-import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph
+import com.orientechnologies.orient.core.db.ODatabaseSession
+import com.orientechnologies.orient.core.db.OrientDB
+import com.orientechnologies.orient.core.db.OrientDBConfig
 
-import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal
-import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.in
-import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.select
+var context = new OrientDB("embedded:", OrientDBConfig.defaultConfig())
+context.execute("create database swimming memory users(admin identified by 'adminpwd' role admin)").close()
 
-static insertAthlete(TraversalSource g, first, last, dob) {
-    g.addV('athlete').property(first: first, last: last, dob: dob).next()
+def insertSwimmer(ODatabaseSession db, name, country) {
+    var swimmer = db.newVertex('Swimmer')
+    swimmer.setProperty('name', name)
+    swimmer.setProperty('country', country)
+    swimmer
 }
 
-static insertRun(TraversalSource g, h, m, s, where, when, athlete) {
-    var run = g.addV('marathon').property(distance: 42195, when: when, where: where, time: h * 60 * 60 + m * 60 + s).next()
-    athlete.addEdge('won', run)
-    run
+def insertSwim(ODatabaseSession db, at, event, time, result, swimmer) {
+    var swim = db.newVertex('Swim')
+    swim.setProperty('at', at)
+    swim.setProperty('result', result)
+    swim.setProperty('event', event)
+    swim.setProperty('time', time)
+    swimmer.addEdge(swim, 'swam')
+    swim
 }
 
-Vertex athlete1, athlete2, athlete3, athlete4
-Vertex marathon1, marathon2a, marathon2b, marathon3, marathon4a, marathon4b
+try (var db = context.open("swimming", "admin", "adminpwd")) {
+    db.createVertexClass('Swimmer')
+    db.createVertexClass('Swim')
+    db.createEdgeClass('swam')
+    db.createEdgeClass('supersedes')
 
-def run() {
-    var graph = TinkerGraph.open()
-    var g = traversal().withEmbedded(graph)
-    athlete1 = g.addV('athlete').property(first: 'Paul', last: 'Tergat', dob: '1969-06-17').next()
-    marathon1 = g.addV('marathon').property(distance: 42195, when: '2003-09-28', where: 'Berlin', time: 2 * 60 * 60 + 4 * 60 + 55).next()
-    athlete1.addEdge('won', marathon1)
+    var es = db.newVertex('Swimmer')
+    es.setProperty('name', 'Emily Seebohm')
+    es.setProperty('country', '🇦🇺')
+    var swim1 = db.newVertex('Swim')
+    swim1.setProperty('at', 'London 2012')
+    swim1.setProperty('result', 'First')
+    swim1.setProperty('event', 'Heat 4')
+    swim1.setProperty('time', 58.23)
+    es.addEdge(swim1, 'swam')
 
-    def (first, last) = ['first', 'last'].collect{g.V(athlete1).values(it)[0] }
-    def (where, when) = ['where', 'when'].collect{ g.V(marathon1).values(it)[0] }
-    println "$first $last won the $where marathon on $when"
+    var (name, country) = ['name', 'country'].collect { es.getProperty(it) }
+    var (at, event, time) = ['at', 'event', 'time'].collect { swim1.getProperty(it) }
+    println "$name from $country swam a time of $time in $event at the $at Olympics"
 
-    athlete2 = insertAthlete(g, 'Khalid', 'Khannouchi', '1971-12-22')
-    marathon2a = insertRun(g, 2, 5, 38, 'London', '2002-04-14', athlete2)
-    marathon2b = insertRun(g, 2, 5, 42, 'Chicago', '1999-10-24', athlete2)
+    var km = insertSwimmer(db, 'Kylie Masse', '🇨🇦')
+    var swim2 = insertSwim(db, 'Tokyo 2021', 'Heat 4', 58.17, 'First', km)
+    swim2.addEdge(swim1, 'supersedes')
+    var swim3 = insertSwim(db, 'Tokyo 2021', 'Final', 57.72, '🥈', km)
 
-    athlete3 = insertAthlete(g, 'Ronaldo', 'da Costa', '1970-06-07')
-    marathon3 = insertRun(g, 2, 6, 5, 'Berlin', '1998-09-20', athlete3)
+    var rs = insertSwimmer(db, 'Regan Smith', '🇺🇸')
+    var swim4 = insertSwim(db, 'Tokyo 2021', 'Heat 5', 57.96, 'First', rs)
+    swim4.addEdge(swim2, 'supersedes')
+    var swim5 = insertSwim(db, 'Tokyo 2021', 'Semifinal 1', 57.86, '', rs)
+    var swim6 = insertSwim(db, 'Tokyo 2021', 'Final', 58.05, '🥉', rs)
+    var swim7 = insertSwim(db, 'Paris 2024', 'Final', 57.66, '🥈', rs)
+    var swim8 = insertSwim(db, 'Paris 2024', 'Relay leg1', 57.28, 'First', rs)
 
-    athlete4 = insertAthlete(g, 'Paula', 'Radcliffe', '1973-12-17')
-    marathon4a = insertRun(g, 2, 17, 18, 'Chicago', '2002-10-13', athlete4)
-    marathon4b = insertRun(g, 2, 15, 25, 'London', '2003-04-13', athlete4)
+    var kmk = insertSwimmer(db, 'Kaylie McKeown', '🇦🇺')
+    var swim9 = insertSwim(db, 'Tokyo 2021', 'Heat 6', 57.88, 'First', kmk)
+    swim9.addEdge(swim4, 'supersedes')
+    swim5.addEdge(swim9, 'supersedes')
+    var swim10 = insertSwim(db, 'Tokyo 2021', 'Final', 57.47, '🥇', kmk)
+    swim10.addEdge(swim5, 'supersedes')
+    var swim11 = insertSwim(db, 'Paris 2024', 'Final', 57.33, '🥇', kmk)
+    swim11.addEdge(swim10, 'supersedes')
+    swim8.addEdge(swim11, 'supersedes')
 
-    def wonInLondon = g.V().out('won').has('where', 'London').in()
-        .values('last').toSet()
-    assert wonInLondon == ['Khannouchi', 'Radcliffe'] as Set
+    var kb = insertSwimmer(db, 'Katharine Berkoff', '🇺🇸')
+    var swim12 = insertSwim(db, 'Paris 2024', 'Final', 57.98, '🥉', kb)
 
-    marathon2b.addEdge('supercedes', marathon3)
-    marathon2a.addEdge('supercedes', marathon2b)
-    marathon1.addEdge('supercedes', marathon2a)
-    marathon4b.addEdge('supercedes', marathon4a)
-
-    def bornAfter1970 = g.V().hasLabel('athlete')
-        .filter{ it.get().property('dob').value()[0..3] > '1970' }
-        .values('last').toSet()
-    assert bornAfter1970 == ['Radcliffe', 'Khannouchi'] as Set
-
-    def londonRecordDates = g.V().has('where', 'London').as('m').out('supercedes')
-        .select('m').values('when').toSet()
-    assert londonRecordDates == ['2002-04-14', '2003-04-13'] as Set
-
-    println "World records after ${g.V(marathon3).values('where', 'when').toList().join(' ')}: "
-    println g.V(marathon3).repeat(in('supercedes')).as('m').emit()
-        .values('where').concat(' ')
-        .concat(select('m').values('when')).toList()
-
-//    def writer = GraphMLWriter.build().normalize(true).create()
-//    new File("/tmp/athletes.graphml").withOutputStream { os ->
-//        writer.writeGraph(os, graph)
-//    }
 }
+
+context.close()

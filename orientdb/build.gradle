@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import static FileUtils.baseNames
+import static FileUtil.baseNames
 
 plugins {
     id 'java-library'

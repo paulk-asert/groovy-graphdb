@@ -25,14 +25,14 @@ Sql.withInstance(DB_URL, USER, PASS, 'org.postgresql.jdbc.PgConnection') { sql -
         (km:swimmer {name: 'Kylie Masse', country: '🇨🇦'}),
         (swim2:swim {event: 'Heat 4', result: 'First', time: 58.17, where: 'Tokyo 2021'}),
         (km)-[:swam]->(swim2),
-        (swim2)-[:supercedes]->(swim1),
+        (swim2)-[:supersedes]->(swim1),
         (swim3:swim {event: 'Final', result: '🥈', time: 57.72, where: 'Tokyo 2021'}),
         (km)-[:swam]->(swim3),
 
         (rs:swimmer {name: 'Regan Smith', country: '🇺🇸'}),
         (swim4:swim {event: 'Heat 5', result: 'First', time: 57.96, where: 'Tokyo 2021'}),
         (rs)-[:swam]->(swim4),
-        (swim4)-[:supercedes]->(swim2),
+        (swim4)-[:supersedes]->(swim2),
         (swim5:swim {event: 'Semifinal 1', result: 'First', time: 57.86, where: 'Tokyo 2021'}),
         (rs)-[:swam]->(swim5),
         (swim6:swim {event: 'Final', result: '🥉', time: 58.05, where: 'Tokyo 2021'}),
@@ -45,15 +45,15 @@ Sql.withInstance(DB_URL, USER, PASS, 'org.postgresql.jdbc.PgConnection') { sql -
         (kmk:swimmer {name: 'Kaylie McKeown', country: '🇦🇺'}),
         (swim9:swim {event: 'Heat 6', result: 'First', time: 57.88, where: 'Tokyo 2021'}),
         (kmk)-[:swam]->(swim9),
-        (swim9)-[:supercedes]->(swim4),
-        (swim5)-[:supercedes]->(swim9),
+        (swim9)-[:supersedes]->(swim4),
+        (swim5)-[:supersedes]->(swim9),
         (swim10:swim {event: 'Final', result: '🥇', time: 57.47, where: 'Tokyo 2021'}),
         (kmk)-[:swam]->(swim10),
-        (swim10)-[:supercedes]->(swim5),
+        (swim10)-[:supersedes]->(swim5),
         (swim11:swim {event: 'Final', result: '🥇', time: 57.33, where: 'Paris 2024'}),
         (kmk)-[:swam]->(swim11),
-        (swim11)-[:supercedes]->(swim10),
-        (swim8)-[:supercedes]->(swim11),
+        (swim11)-[:supersedes]->(swim10),
+        (swim8)-[:supersedes]->(swim11),
 
         (kb:swimmer {name: 'Katharine Berkoff', country: '🇺🇸'}),
         (swim12:swim {event: 'Final', result: '🥉', time: 57.98, where: 'Paris 2024'}),
@@ -71,14 +71,14 @@ Sql.withInstance(DB_URL, USER, PASS, 'org.postgresql.jdbc.PgConnection') { sql -
 
     assert sql.rows('''
         SELECT * from cypher('swimming_graph', $$
-        MATCH (s1:swim {event: 'Final'})-[:supercedes]->(s2:swim)
+        MATCH (s1:swim {event: 'Final'})-[:supersedes]->(s2:swim)
         RETURN s1
         $$) AS (a agtype)
     ''').a*.map*.get('properties')*.time == [57.47, 57.33]
 
     sql.eachRow('''
         SELECT * from cypher('swimming_graph', $$
-        MATCH (s1:swim)-[:supercedes]->(swim1)
+        MATCH (s1:swim)-[:supersedes]->(swim1)
         RETURN s1
         $$) AS (a agtype)
     ''') {

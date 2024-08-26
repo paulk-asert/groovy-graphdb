@@ -5,7 +5,7 @@ import org.neo4j.graphdb.traversal.Uniqueness
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 
-enum AthleteRelationships implements RelationshipType { ran, supercedes }
+enum AthleteRelationships implements RelationshipType { ran, supersedes }
 import static AthleteRelationships.*
 
 var db = '/tmp/athletesDB' as File
@@ -103,17 +103,17 @@ def run() {
         }
         assert wonInLondon*.last == ['Khannouchi', 'Radcliffe']
 
-        marathon2b.supercedes(marathon3)
-        marathon2a.supercedes(marathon2b)
-        marathon1.supercedes(marathon2a)
-        marathon4b.supercedes(marathon4a)
+        marathon2b.supersedes(marathon3)
+        marathon2a.supersedes(marathon2b)
+        marathon1.supersedes(marathon2a)
+        marathon4b.supersedes(marathon4a)
 
         def info = { m -> "$m.where $m.when" }
         println "World records following ${info(marathon3)}:"
 
         for (Path p in tx.traversalDescription()
             .breadthFirst()
-            .relationships(supercedes)
+            .relationships(supersedes)
             .evaluator(Evaluators.fromDepth(1))
             .uniqueness(Uniqueness.NONE)
             .traverse(marathon3)) {

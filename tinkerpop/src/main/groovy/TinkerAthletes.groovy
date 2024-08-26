@@ -63,22 +63,22 @@ def run() {
         .values('last').toSet()
     assert wonInLondon == ['Khannouchi', 'Radcliffe'] as Set
 
-    marathon2b.addEdge('supercedes', marathon3)
-    marathon2a.addEdge('supercedes', marathon2b)
-    marathon1.addEdge('supercedes', marathon2a)
-    marathon4b.addEdge('supercedes', marathon4a)
+    marathon2b.addEdge('supersedes', marathon3)
+    marathon2a.addEdge('supersedes', marathon2b)
+    marathon1.addEdge('supersedes', marathon2a)
+    marathon4b.addEdge('supersedes', marathon4a)
 
     var bornAfter1970 = g.V().hasLabel('athlete')
         .filter{ it.get().property('dob').value()[0..3] > '1970' }
         .values('last').toSet()
     assert bornAfter1970 == ['Radcliffe', 'Khannouchi'] as Set
 
-    var londonRecordDates = g.V().has('where', 'London').as('m').out('supercedes')
+    var londonRecordDates = g.V().has('where', 'London').as('m').out('supersedes')
         .select('m').values('when').toSet()
     assert londonRecordDates == ['2002-04-14', '2003-04-13'] as Set
 
     println "World records after ${g.V(marathon3).values('where', 'when').toList().join(' ')}: "
-    println g.V(marathon3).repeat(in('supercedes')).as('m').emit()
+    println g.V(marathon3).repeat(in('supersedes')).as('m').emit()
         .values('where').concat(' ')
         .concat(select('m').values('when')).toList()
 
