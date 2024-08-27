@@ -24,11 +24,11 @@ import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.in
 import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.select
 
 def insertSwimmer(TraversalSource g, name, country) {
-    g.addV('swimmer').property(name: name, country: country).next()
+    g.addV('Swimmer').property(name: name, country: country).next()
 }
 
 def insertSwim(TraversalSource g, at, event, time, result, swimmer) {
-    var swim = g.addV('swim').property(at: at, event: event, time: time, result: result).next()
+    var swim = g.addV('Swim').property(at: at, event: event, time: time, result: result).next()
     swimmer.addEdge('swam', swim)
     swim
 }
@@ -36,8 +36,8 @@ def insertSwim(TraversalSource g, at, event, time, result, swimmer) {
 var graph = TinkerGraph.open()
 var g = traversal().withEmbedded(graph)
 
-var es = g.addV('swimmer').property(name: 'Emily Seebohm', country: '🇦🇺').next()
-swim1 = g.addV('swim').property(at: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
+var es = g.addV('Swimmer').property(name: 'Emily Seebohm', country: '🇦🇺').next()
+swim1 = g.addV('Swim').property(at: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
 es.addEdge('swam', swim1)
 
 var (name, country) = ['name', 'country'].collect { es.property(it).value() }
@@ -74,7 +74,7 @@ var successInParis = g.V().out('swam').has('at', 'Paris 2024').in()
     .values('country').toSet()
 assert successInParis == ['🇺🇸', '🇦🇺'] as Set
 
-var recordSetInHeat = g.V().hasLabel('swim')
+var recordSetInHeat = g.V().hasLabel('Swim')
     .filter { it.get().property('event').value().startsWith('Heat') }
     .values('at').toSet()
 assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set

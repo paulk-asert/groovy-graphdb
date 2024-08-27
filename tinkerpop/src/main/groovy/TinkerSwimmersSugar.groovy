@@ -25,11 +25,11 @@ import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.select
 SugarLoader.load()
 
 def insertSwimmer(TraversalSource g, name, country) {
-    g.addV('swimmer').property(name: name, country: country).next()
+    g.addV('Swimmer').property(name: name, country: country).next()
 }
 
 def insertSwim(TraversalSource g, at, event, time, result, swimmer) {
-    g.addV('swim').property(at: at, event: event, time: time, result: result).next().tap { swim ->
+    g.addV('Swim').property(at: at, event: event, time: time, result: result).next().tap { swim ->
         swimmer.addEdge('swam', swim)
     }
 }
@@ -37,8 +37,8 @@ def insertSwim(TraversalSource g, at, event, time, result, swimmer) {
 var graph = TinkerGraph.open()
 var g = traversal().withEmbedded(graph)
 
-var es = g.addV('swimmer').property(name: 'Emily Seebohm', country: '🇦🇺').next()
-swim1 = g.addV('swim').property(at: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
+var es = g.addV('Swimmer').property(name: 'Emily Seebohm', country: '🇦🇺').next()
+swim1 = g.addV('Swim').property(at: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
 es.addEdge('swam', swim1)
 
 println "$es.name from $es.country swam a time of $swim1.time in $swim1.event at the $swim1.at Olympics"
@@ -72,7 +72,7 @@ var swim12 = insertSwim(g, 'Paris 2024', 'Final', 57.98, '🥉', kb)
 var successInParis = g.V.out('swam').has('at', 'Paris 2024').in.country.toSet
 assert successInParis == ['🇺🇸', '🇦🇺'] as Set
 
-var recordSetInHeat = g.V.hasLabel('swim').filter { it.event.startsWith('Heat') }.at.toSet
+var recordSetInHeat = g.V.hasLabel('Swim').filter { it.event.startsWith('Heat') }.at.toSet
 assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set
 
 var recordTimesInFinals = g.V.has('event', 'Final').as('ev').out('supersedes').select('ev').time.toSet
