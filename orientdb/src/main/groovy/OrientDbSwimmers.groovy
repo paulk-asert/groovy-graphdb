@@ -50,7 +50,7 @@ try (var db = context.open("swimming", "admin", "adminpwd")) {
     var rs = insertSwimmer(db, 'Regan Smith', '🇺🇸')
     var swim4 = insertSwim(db, 'Tokyo 2021', 'Heat 5', 57.96, 'First', rs)
     swim4.addEdge(swim2, 'supersedes')
-    var swim5 = insertSwim(db, 'Tokyo 2021', 'Semifinal 1', 57.86, '', rs)
+    var swim5 = insertSwim(db, 'Tokyo 2021', 'Semifinal 1', 57.86, 'First', rs)
     var swim6 = insertSwim(db, 'Tokyo 2021', 'Final', 58.05, '🥉', rs)
     var swim7 = insertSwim(db, 'Paris 2024', 'Final', 57.66, '🥈', rs)
     var swim8 = insertSwim(db, 'Paris 2024', 'Relay leg1', 57.28, 'First', rs)
@@ -68,6 +68,23 @@ try (var db = context.open("swimming", "admin", "adminpwd")) {
     var kb = insertSwimmer(db, 'Katharine Berkoff', '🇺🇸')
     var swim12 = insertSwim(db, 'Paris 2024', 'Final', 57.98, '🥉', kb)
 
+    [es, km, rs, kmk, kb]*.save()
+
+    var results = db.query("SELECT expand(out('supersedes').in('supersedes')) FROM Swim WHERE event = 'Final'")
+    assert results*.getProperty('time').toSet() == [57.47, 57.33] as Set
+
+    results = db.query("SELECT expand(out('supersedes')) FROM Swim WHERE event.left(4) = 'Heat'")
+    assert results*.getProperty('at').toSet() == ['Tokyo 2021', 'London 2012'] as Set
+
+    results = db.query("SELECT country FROM ( SELECT expand(in('swam')) FROM Swim WHERE at = 'Paris 2024' )")
+    assert results*.getProperty('country').toSet() == ['🇺🇸', '🇦🇺'] as Set
+
+    results = db.query("TRAVERSE in('supersedes') FROM :swim", swim1)
+    results.each {
+        if (it.toElement() != swim1) {
+            println "${it.getProperty('at')} ${it.getProperty('event')}"
+        }
+    }
 }
 
 context.close()

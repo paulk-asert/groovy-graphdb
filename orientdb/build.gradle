@@ -17,13 +17,7 @@
 import static FileUtil.baseNames
 
 plugins {
-    id 'java-library'
     id 'groovy'
-}
-
-ext {
-    neoVersion = '5.22.0'
-    gremlinVersion = '3.7.2'
 }
 
 dependencies {

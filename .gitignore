@@ -4,6 +4,7 @@ target/
 ignite/
 build/
 out/
+log/
 testoutput/
 
 *.DS_Store

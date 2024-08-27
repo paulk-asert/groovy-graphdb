@@ -30,7 +30,7 @@ dependencies {
     }
     implementation "org.apache.tinkerpop:gremlin-driver:$gremlinVersion"
     implementation "org.apache.tinkerpop:tinkergraph-gremlin:$gremlinVersion"
-    implementation "org.slf4j:slf4j-simple:2.0.13"
+    implementation "org.slf4j:slf4j-simple:$slf4jVersion"
     implementation "org.apache.groovy:groovy:$groovyVersion"
 }
 

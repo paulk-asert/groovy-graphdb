@@ -17,36 +17,29 @@
 import static FileUtil.baseNames
 
 plugins {
-    id 'java-library'
     id 'groovy'
 }
 
 ext {
-    neoVersion = '5.23.0'
     gremlinVersion = '3.7.2'
 }
 
 dependencies {
-    implementation("org.neo4j:neo4j:$neoVersion") {
-//        transitive = false
-    }
-//    implementation "org.neo4j:neo4j-kernel:$neoVersion"
-//    implementation("org.neo4j:neo4j-fabric:$neoVersion") {
-//        exclude group: 'io.netty', module:'netty-codec-http'
-//    }
-//    implementation "io.netty:netty-codec-http:4.1.110.Final"
-//    implementation "org.neo4j:neo4j-bolt:$neoVersion"
-//    implementation "org.neo4j:neo4j-data-collector:$neoVersion"
-//    implementation "org.neo4j:neo4j-dbms:$neoVersion"
-//    implementation "org.neo4j.app:neo4j-server:$neoVersion"
-//    implementation "org.neo4j:neo4j-capabilities:$neoVersion"
-//    implementation "org.neo4j:neo4j-io:2.1.4"
     implementation "org.apache.groovy:groovy:$groovyVersion"
+    implementation "com.arcadedb:arcadedb-engine:24.6.1"
+    implementation "com.arcadedb:arcadedb-gremlin:24.6.1"
+    implementation "com.arcadedb:arcadedb-network:24.6.1"
+    implementation "org.apache.tinkerpop:gremlin-core:$gremlinVersion"
+    implementation "org.apache.tinkerpop:gremlin-util:$gremlinVersion"
+    implementation "org.apache.tinkerpop:gremlin-groovy:$gremlinVersion"
+    implementation "org.opencypher.gremlin:translation:1.0.4"
+    implementation "org.slf4j:slf4j-simple:$slf4jVersion"
 }
 
 def runall = tasks.register('runAll') {
     group 'Application'
 }
+
 baseNames(sourceSets.main.allSource.files, []).each { name ->
     def subtask = tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
