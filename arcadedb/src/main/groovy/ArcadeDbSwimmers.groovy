@@ -69,8 +69,10 @@ try(var db = factory.create()) {
         var kb = insertSwimmer(db, 'Katharine Berkoff', '🇺🇸')
         var swim12 = insertSwim(db, 'Paris 2024', 'Final', 57.98, '🥉', kb)
 
-        var results = db.query('SQL', "SELECT expand(outV()) FROM (SELECT expand(outE('supersedes')) FROM Swim WHERE event = 'Final')")
-        assert results*.toMap()*.time.toSet() == [57.47, 57.33] as Set
+        var results = db.query('SQL', '''
+        SELECT expand(outV()) FROM (SELECT expand(outE('supersedes')) FROM Swim WHERE event = 'Final')
+        ''')
+        assert results*.toMap().time.toSet() == [57.47, 57.33] as Set
 
         results = db.query('gremlin', '''
         g.V().has('event', 'Final').as('ev').out('supersedes').select('ev').values('time')
