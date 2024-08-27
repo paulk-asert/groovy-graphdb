@@ -17,14 +17,14 @@ var managementService = new DatabaseManagementServiceBuilder(db.toPath()).build(
 var graphDb = managementService.database(DEFAULT_DATABASE_NAME)
 
 static insertSwimmer(Transaction tx, name, country) {
-    var sr = tx.createNode(label('swimmer'))
+    var sr = tx.createNode(label('Swimmer'))
     sr.setProperty('name', name)
     sr.setProperty('country', country)
     sr
 }
 
 static insertSwim(Transaction tx, at, event, time, result, swimmer) {
-    var sm = tx.createNode(label('swim'))
+    var sm = tx.createNode(label('Swim'))
     sm.setProperty('result', result)
     sm.setProperty('event', event)
     sm.setProperty('at', at)
@@ -51,11 +51,11 @@ def run() {
 
     try (Transaction tx = graphDb.beginTx()) {
 
-        es = tx.createNode(label('swimmer'))
+        es = tx.createNode(label('Swimmer'))
         es.setProperty('name', 'Emily Seebohm')
         es.setProperty('country', '🇦🇺')
 
-        swim1 = tx.createNode(label('swim'))
+        swim1 = tx.createNode(label('Swim'))
         swim1.setProperty('event', 'Heat 4')
         swim1.setProperty('at', 'London 2012')
         swim1.setProperty('result', 'First')
@@ -69,11 +69,11 @@ def run() {
         var time = swim1.getProperty('time')
         println "$name from $country swam a time of $time in $event at the $at Olympics"
 
-        km = tx.createNode(label('swimmer'))
+        km = tx.createNode(label('Swimmer'))
         km.name = 'Kylie Masse'
         km.country = '🇨🇦'
 
-        swim2 = tx.createNode(label('swim'))
+        swim2 = tx.createNode(label('Swim'))
         swim2.time = 58.17d
         swim2.result = 'First'
         swim2.event = 'Heat 4'
@@ -81,7 +81,7 @@ def run() {
         km.swam(swim2)
         swim2.supersedes(swim1)
 
-        swim3 = tx.createNode(label('swim'))
+        swim3 = tx.createNode(label('Swim'))
         swim3.time = 57.72d
         swim3.result = '🥈'
         swim3.event = 'Final'
@@ -141,26 +141,26 @@ def run() {
         }
 
         assert tx.execute('''
-        MATCH (s:swim WHERE s.event STARTS WITH 'Heat')
+        MATCH (s:Swim WHERE s.event STARTS WITH 'Heat')
         WITH s.at as at
         WITH DISTINCT at
         RETURN at
         ''')*.at == ['London 2012', 'Tokyo 2021']
 
         assert tx.execute('''
-        MATCH (s1:swim {event: 'Final'})-[:supersedes]->(s2:swim)
+        MATCH (s1:Swim {event: 'Final'})-[:supersedes]->(s2:Swim)
         RETURN s1.time AS time
         ''')*.time == [57.47d, 57.33d]
 
         tx.execute('''
-        MATCH (s1:swim)-[:supersedes]->{1,}(s2:swim { at: $at })
+        MATCH (s1:Swim)-[:supersedes]->{1,}(s2:Swim { at: $at })
         RETURN s1
         ''', [at: swim1.at])*.s1.each { s ->
             println "$s.at $s.event"
         }
 
         assert tx.execute('''
-        MATCH (sr1:swimmer)-[:swam]->(sm1:swim {event: 'Final'}), (sm2:swim {event: 'Final'})-[:supersedes]->(sm3:swim)
+        MATCH (sr1:Swimmer)-[:swam]->(sm1:Swim {event: 'Final'}), (sm2:Swim {event: 'Final'})-[:supersedes]->(sm3:Swim)
         WHERE sm1.at = sm2.at AND sm1 <> sm2 AND sm1.time < sm3.time
         RETURN sr1.name as name
         ''')*.name == ['Kylie Masse']
@@ -171,7 +171,7 @@ def run() {
         swim7.runnerup(swim11)
 
         assert tx.execute('''
-        MATCH (sr1:swimmer)-[:swam]->(sm1:swim {event: 'Final'})-[:runnerup]->{1,2}(sm2:swim {event: 'Final'})-[:supersedes]->(sm3:swim)
+        MATCH (sr1:Swimmer)-[:swam]->(sm1:Swim {event: 'Final'})-[:runnerup]->{1,2}(sm2:Swim {event: 'Final'})-[:supersedes]->(sm3:Swim)
         WHERE sm1.time < sm3.time
         RETURN sr1.name as name
         ''')*.name == ['Kylie Masse']
