@@ -1,5 +1,3 @@
-import static FileUtil.baseNames
-
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,6 +14,8 @@ import static FileUtil.baseNames
  * limitations under the License.
  */
 
+import static FileUtil.baseNames
+
 plugins {
     id 'groovy'
 }
@@ -29,19 +29,12 @@ dependencies {
     implementation "org.apache.groovy:groovy-sql:$groovyVersion"
 }
 
-def runall = tasks.register('runAll') {
-    group 'Application'
-}
-
 baseNames(sourceSets.main.allSource.files, []).each { name ->
-    def subtask = tasks.register("run$name", JavaExec) {
+    tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
         group 'Application'
         description "Run ${name}.groovy as a JVM application/Groovy script"
         classpath = sourceSets.main.runtimeClasspath
         mainClass = name
-    }
-    runall.configure {
-        dependsOn subtask
     }
 }

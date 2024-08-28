@@ -29,6 +29,9 @@ dependencies {
     implementation "com.arcadedb:arcadedb-engine:24.6.1"
     implementation "com.arcadedb:arcadedb-gremlin:24.6.1"
     implementation "com.arcadedb:arcadedb-network:24.6.1"
+    /* next two dependencies only needed to access studio */
+//    implementation "com.arcadedb:arcadedb-studio:24.6.1"
+//    implementation "com.arcadedb:arcadedb-server:24.6.1"
     implementation "org.apache.tinkerpop:gremlin-core:$gremlinVersion"
     implementation "org.apache.tinkerpop:gremlin-util:$gremlinVersion"
     implementation "org.apache.tinkerpop:gremlin-groovy:$gremlinVersion"
@@ -36,19 +39,12 @@ dependencies {
     implementation "org.slf4j:slf4j-simple:$slf4jVersion"
 }
 
-def runall = tasks.register('runAll') {
-    group 'Application'
-}
-
 baseNames(sourceSets.main.allSource.files, []).each { name ->
-    def subtask = tasks.register("run$name", JavaExec) {
+    tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
         group 'Application'
         description "Run ${name}.groovy as a JVM application/Groovy script"
         classpath = sourceSets.main.runtimeClasspath
         mainClass = name
-    }
-    runall.configure {
-        dependsOn subtask
     }
 }

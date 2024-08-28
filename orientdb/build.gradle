@@ -25,19 +25,12 @@ dependencies {
     implementation "com.orientechnologies:orientdb-client:3.2.32"
 }
 
-def runall = tasks.register('runAll') {
-    group 'Application'
-}
-
 baseNames(sourceSets.main.allSource.files, []).each { name ->
-    def subtask = tasks.register("run$name", JavaExec) {
+    tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
         group 'Application'
         description "Run ${name}.groovy as a JVM application/Groovy script"
         classpath = sourceSets.main.runtimeClasspath
         mainClass = name
-    }
-    runall.configure {
-        dependsOn subtask
     }
 }

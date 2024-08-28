@@ -14,22 +14,28 @@
  * limitations under the License.
  */
 
+import static FileUtil.baseNames
+
 plugins {
-    id 'java-library'
     id 'groovy'
-    id 'application'
 }
 
-ext.version = '1.4.2'
+ext.tugraphVersion = '1.4.2'
 
 dependencies {
-//    implementation "com.antgroup.tugraph:tugraph-db-java-rpc-client:$version"
-//    implementation "com.antgroup.tugraph:tugraph-db-ogm-api:$version"
-    implementation "com.antgroup.tugraph:tugraph-db-ogm-core:$version"
-    implementation "com.antgroup.tugraph:tugraph-db-rpc-driver:$version"
+//    implementation 'org.neo4j.driver:neo4j-java-driver:4.4.2'
+    implementation "com.antgroup.tugraph:tugraph-db-ogm-core:$tugraphVersion"
+    implementation "com.antgroup.tugraph:tugraph-db-rpc-driver:$tugraphVersion"
+    implementation "org.slf4j:slf4j-simple:$slf4jVersion"
     implementation "org.apache.groovy:groovy:$groovyVersion"
 }
 
-application {
-    mainClass = 'TugraphSwimmers'
+baseNames(sourceSets.main.allSource.files, []).each { name ->
+    tasks.register("run$name", JavaExec) {
+        dependsOn compileGroovy
+        group 'Application'
+        description "Run ${name}.groovy as a JVM application/Groovy script"
+        classpath = sourceSets.main.runtimeClasspath
+        mainClass = name
+    }
 }
