@@ -18,19 +18,14 @@ import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.GraphDatabase
 import org.neo4j.driver.SessionConfig
 //import com.antgroup.tugraph.TuGraphDbRpcClient
-import groovy.transform.Field
 
+//var client = new TuGraphDbRpcClient('localhost:9090', "admin", "73@TuGraph")
+var authToken = AuthTokens.basic("admin", "73@TuGraph")
+var driver = GraphDatabase.driver("bolt://localhost:7687", authToken)
+var session = driver.session(SessionConfig.forDatabase("default"))
 
-//@Field client = new TuGraphDbRpcClient('localhost:9090', "admin", "73@TuGraph")
-@Field authToken = AuthTokens.basic("admin", "73@TuGraph")
-@Field driver = GraphDatabase.driver("bolt://localhost:7687", authToken)
-
-@Field session = driver.session(SessionConfig.forDatabase("default"))
-
-def callCypher(String s) {
-//    client.callCypher(s, "default", 100)
-    session.run(s)
-}
+var run = { String s -> session.run(s) }
+//var run = { String s -> client.callCypher(s, "default", 100) }
 
 '''
 CALL db.dropDB()
@@ -38,9 +33,10 @@ CALL db.createVertexLabel('Swimmer', 'name', 'name', STRING, false, 'country', S
 CALL db.createVertexLabel('Swim', 'id', 'id', INT32, false, 'event', STRING, false, 'result', STRING, false, 'at', STRING, false, 'time', FLOAT, false)
 CALL db.createEdgeLabel('swam','[["Swimmer","Swim"]]')
 CALL db.createEdgeLabel('supersedes','[["Swim","Swim"]]')
-'''.readLines().grep().each(this::callCypher)
+'''.trim().readLines().each{ run(it) }
 
-callCypher '''create
+/* create swims of interest: all records and medals at last two olympics plus previous record */
+run '''create
     (es:Swimmer {name: 'Emily Seebohm', country: 'AU'}),
     (swim1:Swim {event: 'Heat 4', result: 'First', time: 58.23, at: 'London 2012', id:1}),
     (es)-[:swam]->(swim1),
@@ -73,34 +69,33 @@ callCypher '''create
     (swim11:Swim {event: 'Final', result: 'Gold', time: 57.33, at: 'Paris 2024', id:11}),
     (kmk)-[:swam]->(swim11),
     (swim11)-[:supersedes]->(swim10),
-    (swim8)-[:supersedes]->(swim11)
-'''
-
-callCypher '''create
+    (swim8)-[:supersedes]->(swim11),
     (kb:Swimmer {name: 'Katharine Berkoff', country: 'US'}),
     (swim12:Swim {event: 'Final', result: 'Bronze', time: 57.98, at: 'Paris 2024', id:12}),
     (kb)-[:swam]->(swim12)
 '''
 
-assert callCypher('''
-    MATCH (sr:Swimmer)-[:swam]->(sm:Swim)
-    WHERE sm.at = 'Paris 2024'
+/* Successful countries in Paris 2024 */
+assert run('''
+    MATCH (sr:Swimmer)-[:swam]->(sm:Swim {at: 'Paris 2024'})
     RETURN DISTINCT sr.country AS country
-''').list()*.get('country')*.asString().toSet() == ["US", "AU"] as Set
+''')*.get('country')*.asString().toSet() == ["US", "AU"] as Set
 
-assert callCypher('''
+/* At which olympics were records set in heats */
+assert run('''
     MATCH (s:Swim)
     WHERE s.event STARTS WITH 'Heat'
     RETURN DISTINCT s.at AS at
-''').list()*.get('at')*.asString().toSet() == ["London 2012", "Tokyo 2021"] as Set
+''')*.get('at')*.asString().toSet() == ["London 2012", "Tokyo 2021"] as Set
 
-assert callCypher('''
+/* Times for olympic records set in finals */
+assert run('''
     MATCH (s1:Swim {event: 'Final'})-[:supersedes]->(s2:Swim)
     RETURN s1.time as time
-''').list()*.get('time')*.asDouble().toSet() == [57.47d, 57.33d] as Set
+''')*.get('time')*.asDouble().toSet() == [57.47d, 57.33d] as Set
 
-callCypher('''
-    MATCH (s1:Swim)-[:supersedes*1..10]->(s2:Swim)
-    WHERE s2.at = 'London 2012'
+/* Print all records since London 2012 */
+run('''
+    MATCH (s1:Swim)-[:supersedes*1..10]->(s2:Swim {at: 'London 2012'})
     RETURN s1.at as at, s1.event as event
-''').list()*.asMap().each{ println "$it.at $it.event" }
+''')*.asMap().each{ println "$it.at $it.event" }
