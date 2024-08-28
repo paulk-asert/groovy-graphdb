@@ -38,7 +38,7 @@ CALL db.createEdgeLabel('swam','[["Swimmer","Swim"]]')
 CALL db.createEdgeLabel('supersedes','[["Swim","Swim"]]')
 '''.trim().readLines().each{ run(it) }
 
-/* create swims of interest: all records and medals at last two olympics plus previous record */
+/* create swims of interest: all records and medals at last two olympics plus previous record for Women's 100m backstroke */
 run '''create
     (es:Swimmer {name: 'Emily Seebohm', country: 'AU'}),
     (swim1:Swim {event: 'Heat 4', result: 'First', time: 58.23, at: 'London 2012', id:1}),

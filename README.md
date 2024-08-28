@@ -8,3 +8,8 @@ The swimming example contains Groovy code for manipulating some selected backstr
 
 ![Swimmers](docs/images/BackstrokeRecords.png)
 
+All scripts can be run as Gradle tasks. To see available tasks use:
+
+```
+$ ./gradlew tasks --group=Application
+```
