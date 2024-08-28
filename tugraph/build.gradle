@@ -23,9 +23,9 @@ plugins {
 ext.tugraphVersion = '1.4.2'
 
 dependencies {
-//    implementation 'org.neo4j.driver:neo4j-java-driver:4.4.2'
-    implementation "com.antgroup.tugraph:tugraph-db-ogm-core:$tugraphVersion"
-    implementation "com.antgroup.tugraph:tugraph-db-rpc-driver:$tugraphVersion"
+    implementation 'org.neo4j.driver:neo4j-java-driver:4.4.2'
+//    implementation "com.antgroup.tugraph:tugraph-db-ogm-core:$tugraphVersion"
+//    implementation "com.antgroup.tugraph:tugraph-db-rpc-driver:$tugraphVersion"
     implementation "org.slf4j:slf4j-simple:$slf4jVersion"
     implementation "org.apache.groovy:groovy:$groovyVersion"
 }

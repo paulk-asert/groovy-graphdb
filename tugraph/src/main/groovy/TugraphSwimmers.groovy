@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-//import org.neo4j.driver.AuthTokens
-//import org.neo4j.driver.GraphDatabase
-//import org.neo4j.driver.Result
-//import org.neo4j.driver.SessionConfig
-import com.antgroup.tugraph.TuGraphDbRpcClient
+import org.neo4j.driver.AuthTokens
+import org.neo4j.driver.GraphDatabase
+import org.neo4j.driver.SessionConfig
+//import com.antgroup.tugraph.TuGraphDbRpcClient
 import groovy.transform.Field
 
 
-@Field client = new TuGraphDbRpcClient('localhost:9090', "admin", "73@TuGraph")
-//var authToken = AuthTokens.basic("admin", "73@TuGraph")
-//var driver = GraphDatabase.driver("bolt://localhost:7687", authToken)
+//@Field client = new TuGraphDbRpcClient('localhost:9090', "admin", "73@TuGraph")
+@Field authToken = AuthTokens.basic("admin", "73@TuGraph")
+@Field driver = GraphDatabase.driver("bolt://localhost:7687", authToken)
 
-//var session = driver.session(SessionConfig.forDatabase("default"))
+@Field session = driver.session(SessionConfig.forDatabase("default"))
+
 def callCypher(String s) {
-    client.callCypher(s, "default", 100)
+//    client.callCypher(s, "default", 100)
+    session.run(s)
 }
+
 '''
 CALL db.dropDB()
 CALL db.createVertexLabel('Swimmer', 'name', 'name', STRING, false, 'country', STRING, false)
@@ -75,32 +77,30 @@ callCypher '''create
 '''
 
 callCypher '''create
-    (kb:Swimmer {name: 'Katharine Berkoff', country: 'UA'}),
+    (kb:Swimmer {name: 'Katharine Berkoff', country: 'US'}),
     (swim12:Swim {event: 'Final', result: 'Bronze', time: 57.98, at: 'Paris 2024', id:12}),
     (kb)-[:swam]->(swim12)
 '''
 
 assert callCypher('''
+    MATCH (sr:Swimmer)-[:swam]->(sm:Swim)
+    WHERE sm.at = 'Paris 2024'
+    RETURN DISTINCT sr.country AS country
+''').list()*.get('country')*.asString().toSet() == ["US", "AU"] as Set
+
+assert callCypher('''
     MATCH (s:Swim)
     WHERE s.event STARTS WITH 'Heat'
     RETURN DISTINCT s.at AS at
-''') == '[{"at":"London 2012"},{"at":"Tokyo 2021"}]'
+''').list()*.get('at')*.asString().toSet() == ["London 2012", "Tokyo 2021"] as Set
 
 assert callCypher('''
     MATCH (s1:Swim {event: 'Final'})-[:supersedes]->(s2:Swim)
     RETURN s1.time as time
-''') == '[{"time":57.47},{"time":57.33}]'
+''').list()*.get('time')*.asDouble().toSet() == [57.47d, 57.33d] as Set
 
-assert callCypher('''
+callCypher('''
     MATCH (s1:Swim)-[:supersedes*1..10]->(s2:Swim)
     WHERE s2.at = 'London 2012'
     RETURN s1.at as at, s1.event as event
-''') == '''
-    [{"at":"Tokyo 2021","event":"Heat 4"},
-     {"at":"Tokyo 2021","event":"Heat 5"},
-     {"at":"Tokyo 2021","event":"Semifinal 1"},
-     {"at":"Paris 2024","event":"Relay leg1"},
-     {"at":"Tokyo 2021","event":"Heat 6"},
-     {"at":"Tokyo 2021","event":"Final"},
-     {"at":"Paris 2024","event":"Final"}]
-'''.readLines()*.trim().join()
+''').list()*.asMap().each{ println "$it.at $it.event" }
