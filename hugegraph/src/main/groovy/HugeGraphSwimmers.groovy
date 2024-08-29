@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-
 import groovy.transform.Field
 import org.apache.hugegraph.driver.HugeClient
 import org.apache.hugegraph.structure.constant.T
+
+// setup (or run outside docker if you prefer):
+// docker run -itd --name=graph -p 8080:8080 hugegraph/hugegraph
 
 @Field int NUM = 1
 

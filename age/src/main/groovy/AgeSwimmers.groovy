@@ -17,6 +17,9 @@
 import groovy.sql.Sql
 import org.apache.age.jdbc.base.Agtype
 
+// setup (or start outside docker if you prefer):
+// docker run --name age -p 5455:5432 -e POSTGRES_USER=postgresUser -e POSTGRES_PASSWORD=postgresPW -e POSTGRES_DB=postgresDB -d apache/age
+
 String DB_URL = "jdbc:postgresql://localhost:5455/postgresDB"
 String USER = "postgresUser"
 String PASS = "postgresPW"
