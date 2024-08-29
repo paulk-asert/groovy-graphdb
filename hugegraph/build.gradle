@@ -14,4 +14,23 @@
  * limitations under the License.
  */
 
-include 'neo4j', 'tinkerpop', 'age', 'orientdb', 'arcadedb', 'tugraph', 'hugegraph'
+import static FileUtil.baseNames
+
+plugins {
+    id 'groovy'
+}
+
+dependencies {
+    implementation "org.apache.hugegraph:hugegraph-client:1.3.0"
+    implementation "org.apache.groovy:groovy:$groovyVersion"
+}
+
+baseNames(sourceSets.main.allSource.files, []).each { name ->
+    tasks.register("run$name", JavaExec) {
+        dependsOn compileGroovy
+        group 'Application'
+        description "Run ${name}.groovy as a JVM application/Groovy script"
+        classpath = sourceSets.main.runtimeClasspath
+        mainClass = name
+    }
+}
