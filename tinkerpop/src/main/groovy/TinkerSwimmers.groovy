@@ -57,7 +57,7 @@ var swim6 = insertSwim(g, 'Tokyo 2021', 'Final', 58.05, '🥉', rs)
 var swim7 = insertSwim(g, 'Paris 2024', 'Final', 57.66, '🥈', rs)
 var swim8 = insertSwim(g, 'Paris 2024', 'Relay leg1', 57.28, 'First', rs)
 
-var kmk = insertSwimmer(g, 'Kaylie McKeown', '🇦🇺')
+var kmk = insertSwimmer(g, 'Kaylee McKeown', '🇦🇺')
 var swim9 = insertSwim(g, 'Tokyo 2021', 'Heat 6', 57.88, 'First', kmk)
 swim9.addEdge('supersedes', swim4)
 swim5.addEdge('supersedes', swim9)

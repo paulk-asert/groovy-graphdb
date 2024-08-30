@@ -61,7 +61,7 @@ run '''create
     (swim8:Swim {event: 'Relay leg1', result: 'First', time: 57.28, at: 'Paris 2024', id:8}),
     (rs)-[:swam]->(swim8),
     (swim4)-[:supersedes]->(swim2),
-    (kmk:Swimmer {name: 'Kaylie McKeown', country: 'AU'}),
+    (kmk:Swimmer {name: 'Kaylee McKeown', country: 'AU'}),
     (swim9:Swim {event: 'Heat 6', result: 'First', time: 57.88, at: 'Tokyo 2021', id:9}),
     (kmk)-[:swam]->(swim9),
     (swim9)-[:supersedes]->(swim4),

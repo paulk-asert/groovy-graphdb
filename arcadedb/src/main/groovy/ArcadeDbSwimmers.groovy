@@ -82,7 +82,7 @@ try (var db = factory.create()) {
         var swim7 = insertSwim(db, 'Paris 2024', 'Final', 57.66, '🥈', rs)
         var swim8 = insertSwim(db, 'Paris 2024', 'Relay leg1', 57.28, 'First', rs)
 
-        var kmk = insertSwimmer(db, 'Kaylie McKeown', '🇦🇺')
+        var kmk = insertSwimmer(db, 'Kaylee McKeown', '🇦🇺')
         var swim9 = insertSwim(db, 'Tokyo 2021', 'Heat 6', 57.88, 'First', kmk)
         supersedes(swim9, swim4)
         supersedes(swim5, swim9)

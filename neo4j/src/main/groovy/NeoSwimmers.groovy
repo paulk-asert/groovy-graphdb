@@ -112,7 +112,7 @@ def run() {
         swim7 = insertSwim(tx, 'Paris 2024', 'Final', 57.66d, '🥈', rs)
         swim8 = insertSwim(tx, 'Paris 2024', 'Relay leg1', 57.28d, 'First', rs)
 
-        kmk = insertSwimmer(tx, 'Kaylie McKeown', '🇦🇺')
+        kmk = insertSwimmer(tx, 'Kaylee McKeown', '🇦🇺')
         swim9 = insertSwim(tx, 'Tokyo 2021', 'Heat 6', 57.88d, 'First', kmk)
         swim9.supersedes(swim4)
         swim5.supersedes(swim9)

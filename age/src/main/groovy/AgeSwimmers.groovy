@@ -60,7 +60,7 @@ Sql.withInstance(DB_URL, USER, PASS, 'org.postgresql.jdbc.PgConnection') { sql -
         (swim8:Swim {event: 'Relay leg1', result: 'First', time: 57.28, at: 'Paris 2024'}),
         (rs)-[:swam]->(swim8),
 
-        (kmk:Swimmer {name: 'Kaylie McKeown', country: '🇦🇺'}),
+        (kmk:Swimmer {name: 'Kaylee McKeown', country: '🇦🇺'}),
         (swim9:Swim {event: 'Heat 6', result: 'First', time: 57.88, at: 'Tokyo 2021'}),
         (kmk)-[:swam]->(swim9),
         (swim9)-[:supersedes]->(swim4),
