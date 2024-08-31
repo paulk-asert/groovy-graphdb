@@ -14,4 +14,24 @@
  * limitations under the License.
  */
 
-include 'neo4j', 'tinkerpop', 'age', 'orientdb', 'arcadedb', 'tugraph', 'hugegraph', 'h2'
+import static FileUtil.baseNames
+
+plugins {
+    id 'groovy'
+}
+
+dependencies {
+    implementation "org.apache.groovy:groovy:$groovyVersion"
+    implementation "org.apache.groovy:groovy-sql:$groovyVersion"
+    implementation "com.h2database:h2:2.3.232"
+}
+
+baseNames(sourceSets.main.allSource.files, []).each { name ->
+    tasks.register("run$name", JavaExec) {
+        dependsOn compileGroovy
+        group 'Application'
+        description "Run ${name}.groovy as a JVM application/Groovy script"
+        classpath = sourceSets.main.runtimeClasspath
+        mainClass = name
+    }
+}
