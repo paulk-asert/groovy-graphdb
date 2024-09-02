@@ -32,8 +32,8 @@ Sql.withInstance(DB_URL, USER, PASS, 'org.postgresql.jdbc.PgConnection') { sql -
 
     sql.execute("SELECT drop_graph('swimming_graph', true)")
     sql.execute("SELECT create_graph('swimming_graph')")
-    sql.execute("SELECT create_vlabel('swimming_graph', 'swimmer')")
-    sql.execute("SELECT create_vlabel('swimming_graph', 'swim')")
+    sql.execute("SELECT create_vlabel('swimming_graph', 'Swimmer')")
+    sql.execute("SELECT create_vlabel('swimming_graph', 'Swim')")
     sql.execute'''
         SELECT * FROM cypher('swimming_graph', $$ CREATE
         (es:Swimmer {name: 'Emily Seebohm', country: '🇦🇺'}),

@@ -32,6 +32,8 @@ dependencies {
     implementation "org.apache.tinkerpop:tinkergraph-gremlin:$gremlinVersion"
     implementation "org.slf4j:slf4j-simple:$slf4jVersion"
     implementation "org.apache.groovy:groovy:$groovyVersion"
+    testImplementation "org.apache.groovy:groovy-test:$groovyVersion"
+    testImplementation "org.apache.groovy:groovy-typecheckers:$groovyVersion"
 }
 
 baseNames(sourceSets.main.allSource.files, []).each { name ->
