@@ -20,13 +20,13 @@ import org.neo4j.graphdb.traversal.Evaluators
 import org.neo4j.graphdb.traversal.Uniqueness
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
+import static org.neo4j.graphdb.Label.label
 
 enum SwimmingRelationships implements RelationshipType {
     swam, supersedes, runnerup
 }
 
 import static SwimmingRelationships.*
-import static org.neo4j.graphdb.Label.label
 
 var db = '/tmp/swimmersDB' as File
 var managementService = new DatabaseManagementServiceBuilder(db.toPath()).build()
@@ -65,6 +65,10 @@ def run() {
         }
     }
 
+    Transaction.metaClass {
+        createNode { String labelName -> delegate.createNode(label(labelName)) }
+    }
+
     try (Transaction tx = graphDb.beginTx()) {
 
         es = tx.createNode(label('Swimmer'))
@@ -89,7 +93,7 @@ def run() {
         km.name = 'Kylie Masse'
         km.country = '🇨🇦'
 
-        swim2 = tx.createNode(label('Swim'))
+        swim2 = tx.createNode('Swim')
         swim2.time = 58.17d
         swim2.result = 'First'
         swim2.event = 'Heat 4'
@@ -97,7 +101,7 @@ def run() {
         km.swam(swim2)
         swim2.supersedes(swim1)
 
-        swim3 = tx.createNode(label('Swim'))
+        swim3 = tx.createNode('Swim')
         swim3.time = 57.72d
         swim3.result = '🥈'
         swim3.event = 'Final'
