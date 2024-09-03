@@ -22,7 +22,7 @@ plugins {
 
 dependencies {
     implementation "org.apache.groovy:groovy:$groovyVersion"
-    implementation "com.orientechnologies:orientdb-client:3.2.32"
+    implementation "com.orientechnologies:orientdb-client:3.2.33"
 }
 
 baseNames(sourceSets.main.allSource.files, []).each { name ->
