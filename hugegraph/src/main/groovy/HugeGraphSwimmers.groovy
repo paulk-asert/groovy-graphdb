@@ -128,12 +128,9 @@ var successInParis = gremlin.gremlin('''
 ''').execute()
 assert successInParis.data() == ['🇦🇺', '🇺🇸']
 
-// shorthands might be possible if the following class is included in the
-// ImportGremlinPlugin.classImports section of the hugegraph server configuration:
-// org.apache.hugegraph.traversal.optimize.Text
 var recordSetInHeat = gremlin.gremlin('''
     g.V().hasLabel('Swim')
-        .filter { it.get().value('event').startsWith('Heat') }
+        .filter(values('event').is(Text.contains('Heat')))
         .values('at').dedup().order()
 ''').execute()
 assert recordSetInHeat.data() == ['London 2012', 'Tokyo 2021']
