@@ -73,7 +73,7 @@ var swim12 = insertSwim(g, 'Paris 2024', 'Final', 57.98, '🥉', kb)
 var successInParis = g.V.out('swam').has('at', 'Paris 2024').in.country.toSet
 assert successInParis == ['🇺🇸', '🇦🇺'] as Set
 
-var recordSetInHeat = g.V().has('Swim','event', startingWith('Heat')).values('at').toSet
+var recordSetInHeat = g.V.has('Swim','event', startingWith('Heat')).at.toSet
 assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set
 
 var recordTimesInFinals = g.V.has('event', 'Final').as('ev').out('supersedes').select('ev').time.toSet
