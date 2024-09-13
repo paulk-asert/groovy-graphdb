@@ -20,6 +20,7 @@ import org.apache.tinkerpop.gremlin.process.traversal.TraversalSource
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph
 
 import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal
+import static org.apache.tinkerpop.gremlin.process.traversal.TextP.startingWith
 import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.in
 import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.select
 
@@ -40,8 +41,8 @@ var es = g.addV('Swimmer').property(name: 'Emily Seebohm', country: '🇦🇺').
 swim1 = g.addV('Swim').property(at: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
 es.addEdge('swam', swim1)
 
-var (name, country) = ['name', 'country'].collect { es.property(it).value() }
-var (at, event, time) = ['at', 'event', 'time'].collect { swim1.property(it).value() }
+var (name, country) = ['name', 'country'].collect { es.value(it) }
+var (at, event, time) = ['at', 'event', 'time'].collect { swim1.value(it) }
 println "$name from $country swam a time of $time in $event at the $at Olympics"
 
 var km = insertSwimmer(g, 'Kylie Masse', '🇨🇦')
@@ -74,9 +75,7 @@ var successInParis = g.V().out('swam').has('at', 'Paris 2024').in()
     .values('country').toSet()
 assert successInParis == ['🇺🇸', '🇦🇺'] as Set
 
-var recordSetInHeat = g.V().hasLabel('Swim')
-    .filter { it.get().property('event').value().startsWith('Heat') }
-    .values('at').toSet()
+var recordSetInHeat = g.V().has('Swim','event', startingWith('Heat')).values('at').toSet()
 assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set
 
 var recordTimesInFinals = g.V().has('event', 'Final').as('ev').out('supersedes')
