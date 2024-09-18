@@ -40,41 +40,41 @@ CALL db.createEdgeLabel('supersedes','[["Swim","Swim"]]')
 
 /* create swims of interest: all records and medals at last two olympics plus previous record for Women's 100m backstroke */
 run '''create
-    (es:Swimmer {name: 'Emily Seebohm', country: 'AU'}),
+    (es:Swimmer {name: 'Emily Seebohm', country: '🇦🇺'}),
     (swim1:Swim {event: 'Heat 4', result: 'First', time: 58.23, at: 'London 2012', id:1}),
     (es)-[:swam]->(swim1),
-    (km:Swimmer {name: 'Kylie Masse', country: 'CA'}),
+    (km:Swimmer {name: 'Kylie Masse', country: '🇨🇦'}),
     (swim2:Swim {event: 'Heat 4', result: 'First', time: 58.17, at: 'Tokyo 2021', id:2}),
     (km)-[:swam]->(swim2),
-    (swim3:Swim {event: 'Final', result: 'Silver', time: 57.72, at: 'Tokyo 2021', id:3}),
+    (swim3:Swim {event: 'Final', result: '🥈', time: 57.72, at: 'Tokyo 2021', id:3}),
     (km)-[:swam]->(swim3),
     (swim2)-[:supersedes]->(swim1),
-    (rs:Swimmer {name: 'Regan Smith', country: 'US'}),
+    (rs:Swimmer {name: 'Regan Smith', country: '🇺🇸'}),
     (swim4:Swim {event: 'Heat 5', result: 'First', time: 57.96, at: 'Tokyo 2021', id:4}),
     (rs)-[:swam]->(swim4),
     (swim5:Swim {event: 'Semifinal 1', result: 'First', time: 57.86, at: 'Tokyo 2021', id:5}),
     (rs)-[:swam]->(swim5),
-    (swim6:Swim {event: 'Final', result: 'Bronze', time: 58.05, at: 'Tokyo 2021', id:6}),
+    (swim6:Swim {event: 'Final', result: '🥉', time: 58.05, at: 'Tokyo 2021', id:6}),
     (rs)-[:swam]->(swim6),
-    (swim7:Swim {event: 'Final', result: 'Silver', time: 57.66, at: 'Paris 2024', id:7}),
+    (swim7:Swim {event: 'Final', result: '🥈', time: 57.66, at: 'Paris 2024', id:7}),
     (rs)-[:swam]->(swim7),
     (swim8:Swim {event: 'Relay leg1', result: 'First', time: 57.28, at: 'Paris 2024', id:8}),
     (rs)-[:swam]->(swim8),
     (swim4)-[:supersedes]->(swim2),
-    (kmk:Swimmer {name: 'Kaylee McKeown', country: 'AU'}),
+    (kmk:Swimmer {name: 'Kaylee McKeown', country: '🇦🇺'}),
     (swim9:Swim {event: 'Heat 6', result: 'First', time: 57.88, at: 'Tokyo 2021', id:9}),
     (kmk)-[:swam]->(swim9),
     (swim9)-[:supersedes]->(swim4),
     (swim5)-[:supersedes]->(swim9),
-    (swim10:Swim {event: 'Final', result: 'Gold', time: 57.47, at: 'Tokyo 2021', id:10}),
+    (swim10:Swim {event: 'Final', result: '🥇', time: 57.47, at: 'Tokyo 2021', id:10}),
     (kmk)-[:swam]->(swim10),
     (swim10)-[:supersedes]->(swim5),
-    (swim11:Swim {event: 'Final', result: 'Gold', time: 57.33, at: 'Paris 2024', id:11}),
+    (swim11:Swim {event: 'Final', result: '🥇', time: 57.33, at: 'Paris 2024', id:11}),
     (kmk)-[:swam]->(swim11),
     (swim11)-[:supersedes]->(swim10),
     (swim8)-[:supersedes]->(swim11),
-    (kb:Swimmer {name: 'Katharine Berkoff', country: 'US'}),
-    (swim12:Swim {event: 'Final', result: 'Bronze', time: 57.98, at: 'Paris 2024', id:12}),
+    (kb:Swimmer {name: 'Katharine Berkoff', country: '🇺🇸'}),
+    (swim12:Swim {event: 'Final', result: '🥉', time: 57.98, at: 'Paris 2024', id:12}),
     (kb)-[:swam]->(swim12)
 '''
 
@@ -82,7 +82,7 @@ run '''create
 assert run('''
     MATCH (sr:Swimmer)-[:swam]->(sm:Swim {at: 'Paris 2024'})
     RETURN DISTINCT sr.country AS country
-''')*.get('country')*.asString().toSet() == ["US", "AU"] as Set
+''')*.get('country')*.asString().toSet() == ['🇺🇸', '🇦🇺'] as Set
 
 /* At which olympics were records set in heats */
 assert run('''
