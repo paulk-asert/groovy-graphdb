@@ -32,8 +32,8 @@ var run = { String s -> session.run(s) }
 
 '''
 CALL db.dropDB()
-CALL db.createVertexLabel('Swimmer', 'name', 'name', STRING, false, 'country', STRING, false)
-CALL db.createVertexLabel('Swim', 'id', 'id', INT32, false, 'event', STRING, false, 'result', STRING, false, 'at', STRING, false, 'time', FLOAT, false)
+CALL db.createVertexLabel('Swimmer', 'name', 'name', 'STRING', false, 'country', 'STRING', false)
+CALL db.createVertexLabel('Swim', 'id', 'id', 'INT32', false, 'event', 'STRING', false, 'result', 'STRING', false, 'at', 'STRING', false, 'time', 'FLOAT', false)
 CALL db.createEdgeLabel('swam','[["Swimmer","Swim"]]')
 CALL db.createEdgeLabel('supersedes','[["Swim","Swim"]]')
 '''.trim().readLines().each{ run(it) }
