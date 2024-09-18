@@ -17,18 +17,15 @@
 import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.GraphDatabase
 import org.neo4j.driver.SessionConfig
-//import com.antgroup.tugraph.TuGraphDbRpcClient
 
 // setup (or choose different docker image or run outside docker if you prefer):
-// docker run -it -d -p 8000:8000 -p 7687:7687 -p 9090:9090 --name tugraph_demo tugraph/tugraph-runtime-ubuntu18.04 lgraph_server
+// docker run -it -d -p 8000:8000 -p 7687:7687 -p 9090:9090 --name tugraph_demo tugraph/tugraph-runtime-centos7:4.5.0 lgraph_server
 
-//var client = new TuGraphDbRpcClient('localhost:9090', "admin", "73@TuGraph")
 var authToken = AuthTokens.basic("admin", "73@TuGraph")
 var driver = GraphDatabase.driver("bolt://localhost:7687", authToken)
 var session = driver.session(SessionConfig.forDatabase("default"))
 
 var run = { String s -> session.run(s) }
-//var run = { String s -> client.callCypher(s, "default", 100) }
 
 '''
 CALL db.dropDB()
