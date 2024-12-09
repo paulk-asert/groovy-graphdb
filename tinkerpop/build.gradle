@@ -21,7 +21,7 @@ plugins {
 }
 
 ext {
-    gremlinVersion = '3.7.2'
+    gremlinVersion = '3.7.3'
 }
 
 dependencies {
