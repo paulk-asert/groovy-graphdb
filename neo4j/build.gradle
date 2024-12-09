@@ -21,8 +21,8 @@ plugins {
 }
 
 ext {
-    neoVersion = '5.23.0'
-    gremlinVersion = '3.7.2'
+    neoVersion = '5.26.0'
+    gremlinVersion = '3.7.3'
 }
 
 dependencies {
