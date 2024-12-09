@@ -130,7 +130,7 @@ try (var db = factory.create()) {
 
 factory.close()
 
-try (final ArcadeGraph graph = ArcadeGraph.open("/tmp/swimming")) {
+try (final ArcadeGraph graph = ArcadeGraph.open("swimming")) {
     var recordTimesInFinals = graph.traversal().V().has('event', 'Final').as('ev').out('supersedes')
         .select('ev').values('time').toSet()
     assert recordTimesInFinals == [57.47, 57.33] as Set

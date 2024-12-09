@@ -21,17 +21,18 @@ plugins {
 }
 
 ext {
-    gremlinVersion = '3.7.2'
+    gremlinVersion = '3.7.3'
+    arcadedbVersion = '24.11.1'
 }
 
 dependencies {
     implementation "org.apache.groovy:groovy:$groovyVersion"
-    implementation "com.arcadedb:arcadedb-engine:24.6.1"
-    implementation "com.arcadedb:arcadedb-gremlin:24.6.1"
-    implementation "com.arcadedb:arcadedb-network:24.6.1"
+    implementation "com.arcadedb:arcadedb-engine:$arcadedbVersion"
+    implementation "com.arcadedb:arcadedb-gremlin:$arcadedbVersion"
+    implementation "com.arcadedb:arcadedb-network:$arcadedbVersion"
     /* next two dependencies only needed to access studio */
-//    implementation "com.arcadedb:arcadedb-studio:24.6.1"
-//    implementation "com.arcadedb:arcadedb-server:24.6.1"
+//    implementation "com.arcadedb:arcadedb-studio:$arcadedbVersion"
+//    implementation "com.arcadedb:arcadedb-server:$arcadedbVersion"
     implementation "org.apache.tinkerpop:gremlin-core:$gremlinVersion"
     implementation "org.apache.tinkerpop:gremlin-util:$gremlinVersion"
     implementation "org.apache.tinkerpop:gremlin-groovy:$gremlinVersion"
@@ -44,6 +45,7 @@ baseNames(sourceSets.main.allSource.files, []).each { name ->
         dependsOn compileGroovy
         group 'Application'
         description "Run ${name}.groovy as a JVM application/Groovy script"
+        jvmArgs(['--add-opens', 'java.base/java.nio.channels.spi=ALL-UNNAMED'])
         classpath = sourceSets.main.runtimeClasspath
         mainClass = name
     }
