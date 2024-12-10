@@ -19,7 +19,8 @@ import org.neo4j.driver.GraphDatabase
 import org.neo4j.driver.SessionConfig
 
 // setup (or choose different docker image or run outside docker if you prefer):
-// docker run -it -d -p 8000:8000 -p 7687:7687 -p 9090:9090 --name tugraph_demo tugraph/tugraph-runtime-centos7:4.5.0 lgraph_server
+// docker run -it -d -p 8000:8000 -p 7687:7687 -p 9090:9090 --name tugraph_demo tugraph/tugraph-runtime-centos7:4.5.1 lgraph_server
+// docker run -it -d -p 8000:8000 -p 7687:7687 -p 9090:9090 --name tugraph_demo tugraph/tugraph-runtime-arm64v8-centos7:4.5.1 lgraph_server
 
 var authToken = AuthTokens.basic("admin", "73@TuGraph")
 var driver = GraphDatabase.driver("bolt://localhost:7687", authToken)
@@ -36,7 +37,7 @@ CALL db.createEdgeLabel('supersedes','[["Swim","Swim"]]')
 '''.trim().readLines().each{ run(it) }
 
 /* create swims of interest: all records and medals at last two olympics plus previous record for Women's 100m backstroke */
-run '''create
+var all = run('''create
     (es:Swimmer {name: 'Emily Seebohm', country: '🇦🇺'}),
     (swim1:Swim {event: 'Heat 4', result: 'First', time: 58.23, at: 'London 2012', id:1}),
     (es)-[:swam]->(swim1),
@@ -73,7 +74,17 @@ run '''create
     (kb:Swimmer {name: 'Katharine Berkoff', country: '🇺🇸'}),
     (swim12:Swim {event: 'Final', result: '🥉', time: 57.98, at: 'Paris 2024', id:12}),
     (kb)-[:swam]->(swim12)
-'''
+    RETURN es, swim1
+''')
+
+all*.asMap()[0].with {
+    var name = es.get('name').asString()
+    var country = es.get('country').asString()
+    var time = swim1.get('time').asDouble()
+    var at = swim1.get('at').asString()
+    var event = swim1.get('event').asString()
+    println "$name from $country swam a time of $time in $event at the $at Olympics"
+}
 
 /* Successful countries in Paris 2024 */
 assert run('''
