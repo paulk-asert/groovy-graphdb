@@ -22,14 +22,14 @@ plugins {
 
 dependencies {
     implementation "org.apache.groovy:groovy:$groovyVersion"
-    implementation "com.orientechnologies:orientdb-client:3.2.36"
+    implementation "com.orientechnologies:orientdb-client:3.2.38"
 }
 
 baseNames(sourceSets.main.allSource.files, []).each { name ->
     tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
-        group 'Application'
-        description "Run ${name}.groovy as a JVM application/Groovy script"
+        group = 'Application'
+        description = "Run ${name}.groovy as a JVM application/Groovy script"
         classpath = sourceSets.main.runtimeClasspath
         mainClass = name
     }
