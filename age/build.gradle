@@ -22,9 +22,9 @@ plugins {
 
 dependencies {
     implementation fileTree(dir: 'lib', include: '*.jar')
-    implementation "org.postgresql:postgresql:42.7.4"
-    runtimeOnly "org.antlr:antlr4:4.13.2"
-    runtimeOnly "org.apache.commons:commons-text:1.12.0"
+    implementation "org.postgresql:postgresql:42.7.5"
+    runtimeOnly "org.antlr:antlr4:4.12.0"
+    runtimeOnly "org.apache.commons:commons-text:1.13.0"
     implementation "org.apache.groovy:groovy:$groovyVersion"
     implementation "org.apache.groovy:groovy-sql:$groovyVersion"
 }
@@ -32,8 +32,8 @@ dependencies {
 baseNames(sourceSets.main.allSource.files, []).each { name ->
     tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
-        group 'Application'
-        description "Run ${name}.groovy as a JVM application/Groovy script"
+        group = 'Application'
+        description = "Run ${name}.groovy as a JVM application/Groovy script"
         classpath = sourceSets.main.runtimeClasspath
         mainClass = name
     }
