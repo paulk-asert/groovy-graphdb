@@ -30,7 +30,7 @@ Sql.withInstance(DB_URL, USER, PASS, 'org.postgresql.jdbc.PgConnection') { sql -
     sql.execute("LOAD 'age'")
     sql.execute('SET search_path = ag_catalog, "$user", public')
 
-    sql.execute("SELECT drop_graph('swimming_graph', true)")
+//    sql.execute("SELECT drop_graph('swimming_graph', true)")
     sql.execute("SELECT create_graph('swimming_graph')")
     sql.execute("SELECT create_vlabel('swimming_graph', 'Swimmer')")
     sql.execute("SELECT create_vlabel('swimming_graph', 'Swim')")
