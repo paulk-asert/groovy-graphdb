@@ -20,10 +20,9 @@ plugins {
     id 'groovy'
 }
 
-ext {
-    neoVersion = '5.26.0'
-    gremlinVersion = '3.7.3'
-}
+def compat21 = JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)
+def neoVersion = compat21 ? '2025.02.0' : '5.26.3'
+def gremlinVersion = '3.7.3'
 
 dependencies {
     implementation("org.neo4j:neo4j:$neoVersion") {
@@ -43,12 +42,19 @@ dependencies {
     implementation "org.apache.groovy:groovy:$groovyVersion"
 }
 
-baseNames(sourceSets.main.allSource.files, []).each { name ->
-    tasks.register("run$name", JavaExec) {
+def runall = tasks.register('runAll') {
+    group 'Application'
+}
+
+baseNames(sourceSets.main.allSource.files).each { name ->
+    def subtask = tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
         group = 'Application'
         description = "Run ${name}.groovy as a JVM application/Groovy script"
         classpath = sourceSets.main.runtimeClasspath
         mainClass = name
+    }
+    runall.configure {
+        dependsOn subtask
     }
 }
