@@ -38,7 +38,7 @@ def runall = tasks.register('runAll') {
     group = 'Application'
 }
 
-baseNames(sourceSets.main.allSource.files).each { name ->
+baseNames(sourceSets.main.allSource.files, ['SwimmingChecker']).each { name ->
     def subtask = tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
         group = 'Application'
