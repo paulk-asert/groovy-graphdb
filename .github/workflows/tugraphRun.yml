@@ -30,9 +30,7 @@ jobs:
 
     services:
       tugraph:
-        image: tugraph/tugraph-runtime-centos7:4.5.1
-        options: >-
-          lgraph_server
+        image: 'tugraph/tugraph-runtime-centos7:4.5.1 lgraph_server'
         ports:
           - 8000:8000
           - 7687:7687
