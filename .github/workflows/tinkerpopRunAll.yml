@@ -16,6 +16,7 @@
 name: "Run TinkerPop scripts"
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'tinkerpop/**'

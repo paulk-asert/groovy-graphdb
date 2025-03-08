@@ -16,6 +16,7 @@
 name: "Run Neo4j scripts"
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'neo4j/**'

@@ -16,6 +16,7 @@
 name: "Run ArcadeDB script"
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'arcadedb/**'

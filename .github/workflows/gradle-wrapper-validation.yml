@@ -16,6 +16,7 @@
 name: "Validate Gradle Wrapper"
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'gradlew'

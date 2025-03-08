@@ -16,6 +16,7 @@
 name: "Run OrientDB script"
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'orientdb/**'

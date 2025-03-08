@@ -16,6 +16,7 @@
 name: "Run H2 script"
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'h2/**'
