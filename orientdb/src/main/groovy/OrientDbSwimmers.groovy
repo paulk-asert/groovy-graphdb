@@ -19,7 +19,7 @@ import com.orientechnologies.orient.core.db.OrientDB
 import com.orientechnologies.orient.core.db.OrientDBConfig
 
 var context = new OrientDB("embedded:", OrientDBConfig.defaultConfig())
-context.execute("create database swimming memory users(admin identified by 'adminpwd' role admin)").close()
+context.execute("create database swimmers memory users(admin identified by 'adminpwd' role admin)").close()
 
 def insertSwimmer(ODatabaseSession db, name, country) {
     var swimmer = db.newVertex('Swimmer')
