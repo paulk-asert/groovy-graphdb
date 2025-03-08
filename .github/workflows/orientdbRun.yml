@@ -40,5 +40,5 @@ jobs:
           check-latest: true
       - uses: gradle/gradle-build-action@v3
       - name: Run scripts with Gradle
-        run: ./gradlew neo4j:runODS
+        run: ./gradlew orientdb:runODS
         timeout-minutes: 60
