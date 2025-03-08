@@ -20,10 +20,8 @@ plugins {
     id 'groovy'
 }
 
-ext {
-    gremlinVersion = '3.7.3'
-    arcadedbVersion = '25.3.1'
-}
+def gremlinVersion = '3.7.3'
+def arcadedbVersion = '25.3.1'
 
 dependencies {
     implementation "org.apache.groovy:groovy:$groovyVersion"
