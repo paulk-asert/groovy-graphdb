@@ -26,7 +26,7 @@ dependencies {
     implementation "com.h2database:h2:2.3.232"
 }
 
-baseNames(sourceSets.main.allSource.files, []).each { name ->
+baseNames(sourceSets.main.allSource.files).each { name ->
     tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
         group = 'Application'
