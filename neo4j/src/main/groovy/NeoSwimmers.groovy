@@ -27,7 +27,7 @@ enum SwimmingRelationships implements RelationshipType {
 }
 import static SwimmingRelationships.*
 
-var db = '/tmp/swimmersDB' as File
+var db = '/tmp/swimDB' as File
 var managementService = new DatabaseManagementServiceBuilder(db.toPath()).build()
 var graphDb = managementService.database(DEFAULT_DATABASE_NAME)
 
