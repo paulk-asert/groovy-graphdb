@@ -22,7 +22,7 @@ plugins {
 
 ext {
     gremlinVersion = '3.7.3'
-    arcadedbVersion = '24.11.2'
+    arcadedbVersion = '25.3.1'
 }
 
 dependencies {
