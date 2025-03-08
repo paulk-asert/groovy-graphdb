@@ -25,7 +25,6 @@ import static org.neo4j.graphdb.Label.label
 enum SwimmingRelationships implements RelationshipType {
     swam, supersedes, runnerup
 }
-
 import static SwimmingRelationships.*
 
 var db = '/tmp/swimmersDB' as File
