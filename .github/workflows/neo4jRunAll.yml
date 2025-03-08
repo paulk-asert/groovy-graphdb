@@ -18,7 +18,7 @@ name: "Run Neo4j scripts"
 on:
   push:
     paths:
-      - 'neo4j'
+      - 'neo4j/**'
 
 permissions:
   contents: read
