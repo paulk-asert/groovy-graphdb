@@ -24,7 +24,7 @@ import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAM
 enum AthleteRelationships implements RelationshipType { ran, supersedes }
 import static AthleteRelationships.*
 
-var db = '/tmp/athletesDB' as File
+var db = '/tmp/athleteDB' as File
 var managementService = new DatabaseManagementServiceBuilder(db.toPath()).build()
 var graphDb = managementService.database(DEFAULT_DATABASE_NAME)
 
