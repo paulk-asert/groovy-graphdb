@@ -92,7 +92,7 @@ try (var db = context.open("swimming", "admin", "adminpwd")) {
     results = db.query("SELECT expand(out('supersedes')) FROM Swim WHERE event.left(4) = 'Heat'")
     assert results*.getProperty('at').toSet() == ['Tokyo 2021', 'London 2012'] as Set
 
-    results = db.query("SELECT country FROM ( SELECT expand(in('swam')) FROM Swim WHERE at = 'Paris 2024' )")
+    results = db.query("SELECT country FROM ( SELECT expand(in('swam')) FROM Swim WHERE at = ' Paris 2024' )")
     assert results*.getProperty('country').toSet() == ['🇺🇸', '🇦🇺'] as Set
 
     results = db.query("TRAVERSE in('supersedes') FROM :swim", swim1)
