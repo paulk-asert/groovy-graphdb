@@ -16,6 +16,7 @@
 name: "Run ApacheAge script"
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'age/**'
