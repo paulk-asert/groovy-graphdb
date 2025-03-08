@@ -25,10 +25,10 @@ def insertSwimmer(db, name, country) {
 }
 
 def insertSwim(db, at, event, time, result, swimmer) {
-    var swim = db.newVertex('Swim')
-    swim.set(at: at, result: result, event: event, time: time).save()
-    swim.newEdge('swam', swimmer, false).save()
-    swim
+    db.newVertex('Swim').tap {
+        set(at: at, result: result, event: event, time: time).save()
+        newEdge('swam', swimmer, false).save()
+    }
 }
 
 def supersedes(swimA, swimB) {
