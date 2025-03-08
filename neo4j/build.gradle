@@ -43,7 +43,7 @@ dependencies {
 }
 
 def runall = tasks.register('runAll') {
-    group 'Application'
+    group = 'Application'
 }
 
 baseNames(sourceSets.main.allSource.files).each { name ->
