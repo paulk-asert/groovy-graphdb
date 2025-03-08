@@ -20,9 +20,7 @@ plugins {
     id 'groovy'
 }
 
-ext {
-    gremlinVersion = '3.7.3'
-}
+def gremlinVersion = '3.7.3'
 
 dependencies {
     implementation("org.apache.tinkerpop:gremlin-groovy:$gremlinVersion") {
@@ -36,12 +34,19 @@ dependencies {
     testImplementation "org.apache.groovy:groovy-typecheckers:$groovyVersion"
 }
 
-baseNames(sourceSets.main.allSource.files, []).each { name ->
-    tasks.register("run$name", JavaExec) {
+def runall = tasks.register('runAll') {
+    group = 'Application'
+}
+
+baseNames(sourceSets.main.allSource.files).each { name ->
+    def subtask = tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
         group = 'Application'
         description = "Run ${name}.groovy as a JVM application/Groovy script"
         classpath = sourceSets.main.runtimeClasspath
         mainClass = name
+    }
+    runall.configure {
+        dependsOn subtask
     }
 }
