@@ -40,6 +40,7 @@ dependencies {
 //    implementation "org.neo4j:neo4j-capabilities:$neoVersion"
 //    implementation "org.neo4j:neo4j-io:2.1.4"
     implementation "org.apache.groovy:groovy:$groovyVersion"
+    implementation 'org.neo4j:neo4j-graphql-java:1.9.0'
 }
 
 def runall = tasks.register('runAll') {

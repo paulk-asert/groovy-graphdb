@@ -18,6 +18,8 @@ import org.neo4j.dbms.api.DatabaseManagementServiceBuilder
 import org.neo4j.graphdb.*
 import org.neo4j.graphdb.traversal.Evaluators
 import org.neo4j.graphdb.traversal.Uniqueness
+import org.neo4j.graphql.SchemaBuilder
+import org.neo4j.graphql.Translator
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import static org.neo4j.graphdb.Label.label
@@ -194,5 +196,37 @@ def run() {
         WHERE sm1.time < sm3.time
         RETURN sr1.name as name
         ''')*.name == ['Kylie Masse']
+
+        var schema = '''
+        type Swimmer {
+            name: String!
+            country: String!
+        }
+
+        type Swim {
+            who: Swimmer! @relation(name: "swam", direction: IN)
+            at: String!
+            result: String!
+            event: String!
+            time: Float
+        }
+
+        type Query {
+            success(at: String!): [Swim!]
+        }
+        '''
+        var graphql = new Translator(SchemaBuilder.buildSchema(schema))
+        var cypher = graphql.translate('''
+        query success($at: String!) {
+            success(at: $at) {
+                who {
+                    country
+                }
+            }
+        }
+        ''', [at: 'Paris 2024'])
+        assert tx.execute(cypher.query.first(), cypher.params.first()).collect{
+            it.success.who.country
+        }.toUnique() == ['🇺🇸', '🇦🇺']
     }
 }
