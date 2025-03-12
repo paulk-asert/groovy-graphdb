@@ -15,7 +15,9 @@
  */
 import gql.DSL
 import graphql.schema.DataFetchingEnvironment
-import groovy.transform.Immutable
+//import groovy.transform.TupleConstructor
+
+//import static groovy.transform.DefaultsMode.ON
 
 var swimmerType = DSL.type('Swimmer') {
     field 'name', GraphQLString
@@ -30,17 +32,9 @@ var swimType = DSL.type('Swim') {
     field 'time', GraphQLFloat
 }
 
-@Immutable
-class Swimmer {
-    String name, country
-}
+record Swimmer(String name, String country) {}
 
-@Immutable
-class Swim {
-    Swimmer who
-    String at, result, event
-    double time
-}
+record Swim(Swimmer who, String at, String result, String event, double time) {}
 
 var es = new Swimmer('Emily Seebohm', '🇦🇺')
 var km = new Swimmer('Kylie Masse', '🇨🇦')
