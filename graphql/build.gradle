@@ -14,4 +14,24 @@
  * limitations under the License.
  */
 
-include 'neo4j', 'tinkerpop', 'age', 'orientdb', 'arcadedb', 'tugraph', 'hugegraph', 'h2', 'graphql'
+import static FileUtil.baseNames
+
+plugins {
+    id 'groovy'
+}
+
+dependencies {
+    implementation "org.apache.groovy:groovy:$groovyVersion"
+    implementation "com.graphql-java:graphql-java:21.5"
+    runtimeOnly "org.slf4j:slf4j-simple:$slf4jVersion"
+}
+
+baseNames(sourceSets.main.allSource.files).each { name ->
+    tasks.register("run$name", JavaExec) {
+        dependsOn compileGroovy
+        group = 'Application'
+        description = "Run ${name}.groovy as a JVM application/Groovy script"
+        classpath = sourceSets.main.runtimeClasspath
+        mainClass = name
+    }
+}

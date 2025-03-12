@@ -1,0 +1,20 @@
+type Swimmer {
+    name: String!
+    country: String!
+}
+
+type Swim {
+    who: Swimmer!
+    at: String!
+    result: String!
+    event: String!
+    time: Float
+}
+
+type Query {
+    findSwim(name: String!, event: String!, at: String!): Swim!
+    recordsInFinals: [Swim!]
+    recordsInHeats: [Swim!]
+    allRecords: [Swim!]
+    success(at: String!): [Swim!]
+}
