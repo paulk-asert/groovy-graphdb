@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import static FileUtil.baseNames
-
 plugins {
     id 'groovy'
 }
@@ -25,7 +23,7 @@ dependencies {
     implementation "com.graphql-java:graphql-java:22.3"
 }
 
-baseNames(sourceSets.main.allSource.files).each { name ->
+FileUtil.baseNames(sourceSets.main.allSource.files).each { name ->
     tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
         group = 'Application'

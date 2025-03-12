@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-import static FileUtil.baseNames
-
 plugins {
     id 'groovy'
 }
 
 dependencies {
-    implementation 'org.neo4j.driver:neo4j-java-driver:5.28.2'
+    implementation 'org.neo4j.driver:neo4j-java-driver:5.28.3'
     implementation "org.apache.groovy:groovy:$groovyVersion"
     runtimeOnly "org.slf4j:slf4j-simple:$slf4jVersion"
 }
 
-baseNames(sourceSets.main.allSource.files, []).each { name ->
+FileUtil.baseNames(sourceSets.main.allSource.files, []).each { name ->
     tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
         group = 'Application'
