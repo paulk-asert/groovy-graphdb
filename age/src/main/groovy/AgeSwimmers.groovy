@@ -101,6 +101,6 @@ Sql.withInstance(DB_URL, USER, PASS, 'org.postgresql.jdbc.PgConnection') { sql -
         RETURN s1
         $$) AS (a agtype)
     ''') {
-        println it.a*.map*.get('properties')[0].with{ "$it.at $it.event" }
+        println it.a*.map*.get('properties')[0].with { "$it.at $it.event" }
     }
 }

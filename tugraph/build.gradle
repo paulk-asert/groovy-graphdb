@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-plugins {
-    id 'groovy'
-}
-
 dependencies {
     implementation 'org.neo4j.driver:neo4j-java-driver:5.28.3'
     implementation "org.apache.groovy:groovy:$groovyVersion"

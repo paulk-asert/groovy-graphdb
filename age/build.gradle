@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-import static FileUtil.baseNames
-
-plugins {
-    id 'groovy'
-}
-
 dependencies {
     implementation fileTree(dir: 'lib', include: '*.jar')
     implementation "org.postgresql:postgresql:42.7.5"
@@ -29,7 +23,7 @@ dependencies {
     implementation "org.apache.groovy:groovy-sql:$groovyVersion"
 }
 
-baseNames(sourceSets.main.allSource.files, []).each { name ->
+FileUtil.baseNames(sourceSets.main.allSource.files, []).each { name ->
     tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
         group = 'Application'

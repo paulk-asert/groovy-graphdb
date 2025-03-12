@@ -16,25 +16,34 @@
 
 plugins {
     id 'com.github.ben-manes.versions' version '0.52.0'
+    id 'org.nosphere.apache.rat' version '0.8.1'
 }
 
 allprojects {
+    apply(plugin: 'groovy')
+    apply(plugin: 'codenarc')
     repositories {
         mavenCentral()
     }
+    codenarc.configFile = rootProject.file('config/codenarc/rulesets.groovy')
 }
 
 ext {
     groovyVersion = '5.0.0-alpha-12'
     slf4jVersion = '2.0.17'
-    UNSTABLE = /^([0-9,.-]+[.-](alpha|beta|rc)[.\d-]*)|20030203.000550$/
 }
 
+
 // ignore non-stable releases
+def UNSTABLE = /^([0-9,.-]+[.-](alpha|beta|rc)[.\d-]*)|20030203.000550$/
 tasks.named("dependencyUpdates").configure {
     gradleReleaseChannel = 'current'
     outputFormatter = 'plain'
     rejectVersionIf {
         !(it.currentVersion.toLowerCase() ==~ UNSTABLE) && it.candidate.version.toLowerCase() ==~ UNSTABLE
     }
+}
+
+tasks.named('rat') {
+    excludes = ['**/build/**', '.idea', 'gradle/wrapper', '**/.gradle', 'arcadedb/log', 'arcadedb/swimming']
 }

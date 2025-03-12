@@ -125,7 +125,6 @@ try (var db = factory.create()) {
             }
         }
     }
-
 }
 
 factory.close()

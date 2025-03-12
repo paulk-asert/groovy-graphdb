@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-import static FileUtil.baseNames
-
-plugins {
-    id 'groovy'
-}
-
 dependencies {
     implementation "org.apache.groovy:groovy:$groovyVersion"
     implementation "com.orientechnologies:orientdb-client:3.2.38"
 }
 
-baseNames(sourceSets.main.allSource.files, []).each { name ->
+FileUtil.baseNames(sourceSets.main.allSource.files, []).each { name ->
     tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
         group = 'Application'

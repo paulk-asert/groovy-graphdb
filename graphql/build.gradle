@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-plugins {
-    id 'groovy'
-}
-
 dependencies {
     implementation "org.apache.groovy:groovy:$groovyVersion"
     implementation "com.graphql-java:graphql-java:22.3"

@@ -14,24 +14,27 @@
  * limitations under the License.
  */
 
+import groovy.test.GroovyTestCase
 import groovy.transform.TypeChecked
 import org.apache.tinkerpop.gremlin.structure.Vertex
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph
 
 import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal
 
-def init() {
-    Vertex.metaClass.coaches = { Vertex other -> delegate.addEdge('coaches', other) }
-}
+class SwimmingTypeCheckingTest extends GroovyTestCase {
+    def init() {
+        Vertex.metaClass.coaches = { Vertex other -> delegate.addEdge('coaches', other) }
+    }
 
-@TypeChecked(extensions = 'SwimmingChecker.groovy')
-def method() {
-    init()
-    var graph = TinkerGraph.open()
-    var g = traversal().withEmbedded(graph)
-    var swim1 = g.addV('Swim').property(at: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
-    var kmk = g.addV('Swimmer').property(name: 'Kaylee McKeown', country: '🇦🇺').next()
-    var mb = g.addV('Coach').property(name: 'Michael Bohl').next()
-    mb.coaches(kmk)
+    @TypeChecked(extensions = 'SwimmingChecker.groovy')
+    void testEdge() {
+        init()
+        var graph = TinkerGraph.open()
+        var g = traversal().withEmbedded(graph)
+        var swim1 = g.addV('Swim').property(at: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
+        var kmk = g.addV('Swimmer').property(name: 'Kaylee McKeown', country: '🇦🇺').next()
+        var mb = g.addV('Coach').property(name: 'Michael Bohl').next()
+        mb.coaches(kmk)
 //    swim1.coaches(mb)
+    }
 }

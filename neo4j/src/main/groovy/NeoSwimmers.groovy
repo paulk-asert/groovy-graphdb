@@ -71,7 +71,6 @@ def run() {
     }
 
     try (Transaction tx = graphDb.beginTx()) {
-
         es = tx.createNode(label('Swimmer'))
         es.setProperty('name', 'Emily Seebohm')
         es.setProperty('country', '🇦🇺')

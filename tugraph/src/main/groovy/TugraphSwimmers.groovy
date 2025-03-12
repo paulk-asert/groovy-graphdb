@@ -34,7 +34,7 @@ CALL db.createVertexLabel('Swimmer', 'name', 'name', 'STRING', false, 'country',
 CALL db.createVertexLabel('Swim', 'id', 'id', 'INT32', false, 'event', 'STRING', false, 'result', 'STRING', false, 'at', 'STRING', false, 'time', 'FLOAT', false)
 CALL db.createEdgeLabel('swam','[["Swimmer","Swim"]]')
 CALL db.createEdgeLabel('supersedes','[["Swim","Swim"]]')
-'''.trim().readLines().each{ run(it) }
+'''.trim().readLines().each { run(it) }
 
 /* create swims of interest: all records and medals at last two olympics plus previous record for Women's 100m backstroke */
 var all = run('''create
@@ -109,4 +109,4 @@ assert run('''
 run('''
     MATCH (s1:Swim)-[:supersedes*1..10]->(s2:Swim {at: 'London 2012'})
     RETURN s1.at as at, s1.event as event
-''')*.asMap().each{ println "$it.at $it.event" }
+''')*.asMap().each { println "$it.at $it.event" }

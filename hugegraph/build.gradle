@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-import static FileUtil.baseNames
-
-plugins {
-    id 'groovy'
-}
-
 //repositories {
 //    maven {
 //        url = 'https://repository.apache.org/content/groups/staging/'
@@ -31,7 +25,7 @@ dependencies {
     implementation "org.apache.groovy:groovy:$groovyVersion"
 }
 
-baseNames(sourceSets.main.allSource.files, []).each { name ->
+FileUtil.baseNames(sourceSets.main.allSource.files, []).each { name ->
     tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
         group = 'Application'

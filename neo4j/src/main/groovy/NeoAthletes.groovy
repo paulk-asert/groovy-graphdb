@@ -63,7 +63,6 @@ def run() {
     }
 
     try (Transaction tx = graphDb.beginTx()) {
-
         athlete1 = tx.createNode()
         athlete1.setProperty('first', 'Paul')
         athlete1.setProperty('last', 'Tergat')
@@ -81,7 +80,6 @@ def run() {
         def where = marathon1.getProperty('where')
         def when = marathon1.getProperty('when')
         println "$first $last won the $where marathon on $when"
-
 
 /*
         Relationship.metaClass {
@@ -135,6 +133,5 @@ def run() {
             .traverse(marathon3)) {
             println p.endNode().with(info)
         }
-
     }
 }

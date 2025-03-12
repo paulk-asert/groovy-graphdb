@@ -44,8 +44,8 @@ def run() {
     athlete1.addEdge('won', marathon1)
 
     // show two different ways to extract properties:
-    var (first, last) = ['first', 'last'].collect{athlete1.property(it).value() }
-    var (where, when) = ['where', 'when'].collect{ g.V(marathon1).values(it)[0] }
+    var (first, last) = ['first', 'last'].collect { athlete1.property(it).value() }
+    var (where, when) = ['where', 'when'].collect { g.V(marathon1).values(it)[0] }
     println "$first $last won the $where marathon on $when"
 
     athlete2 = insertAthlete(g, 'Khalid', 'Khannouchi', '1971-12-22')
@@ -69,7 +69,7 @@ def run() {
     marathon4b.addEdge('supersedes', marathon4a)
 
     var bornAfter1970 = g.V().hasLabel('athlete')
-        .filter{ it.get().property('dob').value()[0..3] > '1970' }
+        .filter { it.get().property('dob').value()[0..3] > '1970' }
         .values('last').toSet()
     assert bornAfter1970 == ['Radcliffe', 'Khannouchi'] as Set
 
