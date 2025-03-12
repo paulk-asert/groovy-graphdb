@@ -15,9 +15,6 @@
  */
 import gql.DSL
 import graphql.schema.DataFetchingEnvironment
-//import groovy.transform.TupleConstructor
-
-//import static groovy.transform.DefaultsMode.ON
 
 var swimmerType = DSL.type('Swimmer') {
     field 'name', GraphQLString
