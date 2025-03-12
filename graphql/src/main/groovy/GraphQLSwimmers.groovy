@@ -66,18 +66,18 @@ var swimFetcher = { DataFetchingEnvironment env ->
     var name = env.getArgument('name')
     var at = env.getArgument('at')
     var event = env.getArgument('event')
-    swims.find{s -> s.who.name == name && s.at == at && s.event == event }
+    swims.find{ s -> s.who.name == name && s.at == at && s.event == event }
 } as DataFetcher<Swim>
 var finalsFetcher = { DataFetchingEnvironment env ->
-    swims.findAll{s -> s.event == 'Final' && supersedes.any{ it[0] == s } }
+    swims.findAll{ s -> s.event == 'Final' && supersedes.any{ it[0] == s } }
 } as DataFetcher<List<Swim>>
 var heatsFetcher = { DataFetchingEnvironment env ->
-    swims.findAll{s -> s.event.startsWith('Heat') &&
+    swims.findAll{ s -> s.event.startsWith('Heat') &&
         (supersedes[0][1] == s || supersedes.any{ it[0] == s }) }
 } as DataFetcher<List<Swim>>
 var successFetcher = { DataFetchingEnvironment env ->
     var at = env.getArgument('at')
-    swims.findAll{s -> s.at == at }
+    swims.findAll{ s -> s.at == at }
 } as DataFetcher<List<Swim>>
 var recordsFetcher = { DataFetchingEnvironment env ->
     supersedes.collect{it[0] }
