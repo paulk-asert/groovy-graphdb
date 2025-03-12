@@ -97,7 +97,7 @@ var wiring = RuntimeWiring.newRuntimeWiring()
     }.build()
 var schema = generator.makeExecutableSchema(types, wiring)
 var graphQL = GraphQL.newGraphQL(schema).build()
-def execute = { String query, Map variables = [:] ->
+var execute = { String query, Map variables = [:] ->
     var executionInput = ExecutionInput.newExecutionInput()
         .query(query)
         .variables(variables)

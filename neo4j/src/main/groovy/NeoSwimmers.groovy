@@ -225,8 +225,7 @@ def run() {
             }
         }
         ''', [at: 'Paris 2024'])
-        assert tx.execute(cypher.query.first(), cypher.params.first()).collect{
-            it.success.who.country
-        }.toUnique() == ['🇺🇸', '🇦🇺']
+        var (q, p) = [cypher.query.first(), cypher.params.first()]
+        assert tx.execute(q, p)*.success*.who*.country.toUnique() == ['🇺🇸', '🇦🇺']
     }
 }
