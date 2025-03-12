@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-import static FileUtil.baseNames
-
 plugins {
     id 'groovy'
 }
 
 def compat21 = JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)
 def neoVersion = compat21 ? '2025.02.0' : '5.26.3'
-def gremlinVersion = '3.7.3'
 
 dependencies {
     implementation("org.neo4j:neo4j:$neoVersion") {
@@ -40,14 +37,14 @@ dependencies {
 //    implementation "org.neo4j:neo4j-capabilities:$neoVersion"
 //    implementation "org.neo4j:neo4j-io:2.1.4"
     implementation "org.apache.groovy:groovy:$groovyVersion"
-    implementation 'org.neo4j:neo4j-graphql-java:1.9.0'
+    implementation 'org.neo4j:neo4j-graphql-java:1.9.1'
 }
 
 def runall = tasks.register('runAll') {
     group = 'Application'
 }
 
-baseNames(sourceSets.main.allSource.files).each { name ->
+FileUtil.baseNames(sourceSets.main.allSource.files).each { name ->
     def subtask = tasks.register("run$name", JavaExec) {
         dependsOn compileGroovy
         group = 'Application'
