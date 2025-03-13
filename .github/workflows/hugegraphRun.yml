@@ -34,17 +34,13 @@ jobs:
         ports:
           - 8080:8080
 
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [17]
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: ${{ matrix.java }}
+          java-version: 17
           check-latest: true
       - uses: gradle/actions/setup-gradle@v4
       - name: Run scripts with Gradle
