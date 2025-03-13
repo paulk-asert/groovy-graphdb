@@ -16,19 +16,6 @@
 import gql.DSL
 import graphql.schema.DataFetchingEnvironment
 
-var swimmerType = DSL.type('Swimmer') {
-    field 'name', GraphQLString
-    field 'country', GraphQLString
-}
-
-var swimType = DSL.type('Swim') {
-    field 'who', swimmerType
-    field 'at', GraphQLString
-    field 'result', GraphQLString
-    field 'event', GraphQLString
-    field 'time', GraphQLFloat
-}
-
 record Swimmer(String name, String country) {}
 
 record Swim(Swimmer who, String at, String result, String event, double time) {}
@@ -64,6 +51,19 @@ var supersedes = [
     [swim11, swim10],
     [swim8, swim11],
 ]
+
+var swimmerType = DSL.type('Swimmer') {
+    field 'name', GraphQLString
+    field 'country', GraphQLString
+}
+
+var swimType = DSL.type('Swim') {
+    field 'who', swimmerType
+    field 'at', GraphQLString
+    field 'result', GraphQLString
+    field 'event', GraphQLString
+    field 'time', GraphQLFloat
+}
 
 var schema = DSL.schema {
     queries {
