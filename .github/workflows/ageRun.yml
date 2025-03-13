@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: "Run ApacheAge script"
+name: "Run Apache Age script"
 
 on:
   workflow_dispatch:
@@ -43,17 +43,13 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [17]
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: ${{ matrix.java }}
+          java-version: 17
           check-latest: true
       - uses: gradle/actions/setup-gradle@v4
       - name: Run scripts with Gradle
