@@ -69,6 +69,14 @@ var swimFetcher = { DataFetchingEnvironment env ->
     swims.find{ s -> s.who.name == name && s.at == at && s.event == event }
 } as DataFetcher<Swim>
 
+var swimsFetcher = { DataFetchingEnvironment env ->
+    var event = env.arguments.event
+    var candidates = [supersedes[0][1]] + supersedes.collect(List::first)
+    candidates.findAll{ s -> event.startsWith('~')
+            ? s.event.matches(event[1..-1])
+            : s.event == event }
+} as DataFetcher<List<Swim>>
+
 var finalsFetcher = { DataFetchingEnvironment env ->
     swims.findAll{ s -> s.event == 'Final' && supersedes.any{ it[0] == s } }
 } as DataFetcher<List<Swim>>
@@ -90,6 +98,7 @@ var recordsFetcher = { DataFetchingEnvironment env ->
 var wiring = RuntimeWiring.newRuntimeWiring()
     .type("Query") { builder ->
         builder.dataFetcher("findSwim", swimFetcher)
+        builder.dataFetcher("findSwims", swimsFetcher)
         builder.dataFetcher("recordsInFinals", finalsFetcher)
         builder.dataFetcher("recordsInHeats", heatsFetcher)
         builder.dataFetcher("success", successFetcher)
@@ -159,3 +168,15 @@ execute('''{
 }''').data.allRecords.each {
     println "$it.at $it.event"
 }
+
+assert execute('''{
+    findSwims(event: "Final") {
+        time
+    }
+}''').data?.findSwims*.time == [57.47, 57.33]
+
+assert execute('''{
+    findSwims(event: "~Heat.*") {
+        at
+    }
+}''').data?.findSwims*.at.toUnique() == ['London 2012', 'Tokyo 2021']
