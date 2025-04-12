@@ -15,7 +15,7 @@
  */
 
 def compat21 = JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)
-def neoVersion = compat21 ? '2025.02.0' : '5.26.3'
+def neoVersion = compat21 ? '2025.03.0' : '5.26.5'
 
 dependencies {
     implementation "org.neo4j:neo4j:$neoVersion"
