@@ -29,10 +29,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [17, 21]
+        java: [17, 21, 24]
         dist: ['zulu', 'graalvm']
         exclude:
           - java: 17
+            dist: 'graalvm'
+          - java: 24
             dist: 'graalvm'
           - java: 21
             dist: 'zulu'

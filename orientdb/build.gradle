@@ -16,7 +16,7 @@
 
 dependencies {
     implementation "org.apache.groovy:groovy:$groovyVersion"
-    implementation "com.orientechnologies:orientdb-client:3.2.38"
+    implementation "com.orientechnologies:orientdb-client:3.2.39"
 }
 
 FileUtil.baseNames(sourceSets.main.allSource.files, []).each { name ->
