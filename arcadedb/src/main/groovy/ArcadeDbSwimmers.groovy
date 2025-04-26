@@ -63,7 +63,7 @@ try (var db = factory.create()) {
 
         var swim1 = db.newVertex('Swim')
         swim1.set(at: 'London 2012', result: 'First', event: 'Heat 4', time: 58.23).save()
-        swim1.newEdge('swam', es, false).save()
+        swim1.newEdge('swam', es, true).save()
 
         var (name, country) = ['name', 'country'].collect { es.get(it) }
         var (at, event, time) = ['at', 'event', 'time'].collect { swim1.get(it) }
