@@ -27,12 +27,12 @@ def insertSwimmer(db, name, country) {
 def insertSwim(db, at, event, time, result, swimmer) {
     db.newVertex('Swim').tap {
         set(at: at, result: result, event: event, time: time).save()
-        newEdge('swam', swimmer, false).save()
+        newEdge('swam', swimmer, true).save()
     }
 }
 
 def supersedes(swimA, swimB) {
-    swimB.newEdge('supersedes', swimA, false).save()
+    swimB.newEdge('supersedes', swimA, true).save()
 }
 
 if (factory.exists()) {
