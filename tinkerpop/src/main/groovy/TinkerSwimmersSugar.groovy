@@ -18,6 +18,7 @@ import org.apache.tinkerpop.gremlin.groovy.loaders.SugarLoader
 import org.apache.tinkerpop.gremlin.process.traversal.TraversalSource
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph
 
+import static org.apache.tinkerpop.gremlin.process.traversal.P.eq
 import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal
 import static org.apache.tinkerpop.gremlin.process.traversal.TextP.startingWith
 import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.in
@@ -82,3 +83,5 @@ assert recordTimesInFinals == [57.47, 57.33] as Set
 println "Olympic records after ${g.V(swim1).values('at', 'event').toList().join(' ')}: "
 println g.V(swim1).repeat(in('supersedes')).as('sw').emit
     .at.concat(' ').concat(select('sw').event).toList.join('\n')
+
+assert g.V.result.is(eq('🥇')).count.next() == 2
