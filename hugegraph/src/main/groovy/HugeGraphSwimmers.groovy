@@ -23,7 +23,7 @@ import org.apache.hugegraph.structure.constant.T
 
 @Field int NUM = 1
 
-var client = HugeClient.builder("http://localhost:8080", "hugegraph").build()
+var client = HugeClient.builder("http://localhost:8080", "hugegraph").configUser("admin", "pa").build()
 var schema = client.schema()
 
 schema.propertyKey("num").asInt().ifNotExist().create()
@@ -146,3 +146,24 @@ gremlin.gremlin('''
 ''').execute().data().collate(2).each { a, e ->
     println "$a $e"
 }
+
+// seems like partial support, e.g. starts with cypher query returns null
+var cypher = client.cypher()
+assert cypher.execute('''
+MATCH (s1:Swim {event: 'Final'})-[:supersedes]->(s2:Swim)
+RETURN s1.time as time
+''').data()*.time == [57.47, 57.33]
+// You can also do this long-hand
+/*
+var uri = new URI("http://localhost:8080/graphs/hugegraph/cypher?cypher=MATCH%20(s1:Swim%20%7Bevent:%20%27Final%27%7D)-[:supersedes]-%3E(s2:Swim)%20RETURN%20s1.time%20as%20time")
+var restClient = HttpClient.newBuilder()
+    .version(HttpClient.Version.HTTP_1_1)
+    .build()
+var request = HttpRequest.newBuilder()
+    .uri(uri)
+    .header("Authorization", "Basic " + "admin:pa".bytes.encodeBase64())
+    .build()
+var response = restClient.send(request, HttpResponse.BodyHandlers.ofInputStream())
+assert new JsonSlurper().parse(new GZIPInputStream(response.body())).result.data*.time == [57.47, 57.33]
+*/
+
