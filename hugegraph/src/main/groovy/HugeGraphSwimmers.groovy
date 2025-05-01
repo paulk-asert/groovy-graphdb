@@ -153,6 +153,17 @@ assert cypher.execute('''
 MATCH (s1:Swim {event: 'Final'})-[:supersedes]->(s2:Swim)
 RETURN s1.time as time
 ''').data()*.time == [57.47, 57.33]
+
+// are extensions enabled?
+// https://github.com/apache/incubator-hugegraph/blob/master/hugegraph-server/hugegraph-api/src/main/java/org/apache/hugegraph/opencypher/CypherOpProcessor.java#L137
+/*
+println cypher.execute('''
+        MATCH (s:Swim)
+        WHERE s.event CONTAINS 'Heat'
+        RETURN s.at as at
+''').data()//*.time == [57.47, 57.33]
+*/
+
 // You can also do this long-hand
 /*
 var uri = new URI("http://localhost:8080/graphs/hugegraph/cypher?cypher=MATCH%20(s1:Swim%20%7Bevent:%20%27Final%27%7D)-[:supersedes]-%3E(s2:Swim)%20RETURN%20s1.time%20as%20time")
