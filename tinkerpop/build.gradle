@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-def gremlinVersion = '3.7.3'
+def gremlinVersion = '3.7.4'
 
 dependencies {
     implementation("org.apache.tinkerpop:gremlin-groovy:$gremlinVersion") {
@@ -28,7 +28,7 @@ dependencies {
     testImplementation "org.apache.groovy:groovy-typecheckers:$groovyVersion"
 }
 
-def runall = tasks.register('runAll') {
+def runAll = tasks.register('runAll') {
     group = 'Application'
 }
 
@@ -40,7 +40,7 @@ FileUtil.baseNames(sourceSets.main.allSource.files, ['SwimmingChecker']).each { 
         classpath = sourceSets.main.runtimeClasspath
         mainClass = name
     }
-    runall.configure {
+    runAll.configure {
         dependsOn subtask
     }
 }
