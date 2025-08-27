@@ -16,7 +16,7 @@
 
 dependencies {
     implementation "org.apache.groovy:groovy:$groovyVersion"
-    implementation "com.graphql-java:graphql-java:23.1"
+    implementation "com.graphql-java:graphql-java:24.2"
 }
 
 FileUtil.baseNames(sourceSets.main.allSource.files).each { name ->
