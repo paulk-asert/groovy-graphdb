@@ -15,7 +15,7 @@
  */
 
 def compat21 = JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)
-def neoVersion = compat21 ? '2025.03.0' : '5.26.5'
+def neoVersion = compat21 ? '2025.07.1' : '5.26.10'
 
 dependencies {
     implementation "org.neo4j:neo4j:$neoVersion"
@@ -23,7 +23,7 @@ dependencies {
     implementation 'org.neo4j:neo4j-graphql-java:1.9.1'
 }
 
-def runall = tasks.register('runAll') {
+def runAll = tasks.register('runAll') {
     group = 'Application'
 }
 
@@ -35,7 +35,7 @@ FileUtil.baseNames(sourceSets.main.allSource.files).each { name ->
         classpath = sourceSets.main.runtimeClasspath
         mainClass = name
     }
-    runall.configure {
+    runAll.configure {
         dependsOn subtask
     }
 }
