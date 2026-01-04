@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-def gremlinVersion = '3.8.0'
-def compat21 = JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)
-def arcadedbVersion = compat21 ? '25.7.1' : '25.11.1'
+var gremlinVersion = '3.7.5'
+var compat21 = JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)
+var arcadedbVersion = compat21 ? '25.11.1' : '25.3.2'
 
 dependencies {
     implementation "org.apache.groovy:groovy:$groovyVersion"
