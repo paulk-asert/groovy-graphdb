@@ -24,7 +24,7 @@ The athlete example contains Groovy code for manipulating some historic marathon
 ![Athletes](docs/images/athletes.graphml.png)
 
 ## Backstroke Swimmer Case Study
-The swimming example contains Groovy code for manipulating some selected backstroke swimming olympic records:
+The swimming example contains Groovy code for manipulating some selected backstroke swimming Olympic records:
 
 ![Swimmers](docs/images/BackstrokeRecords.png)
 

@@ -15,15 +15,9 @@
  */
 
 plugins {
-    id 'groovy-setup'
+    id 'groovy-gradle-plugin'
 }
 
-//repositories {
-//    maven {
-//        url = 'https://repository.apache.org/content/groups/staging/'
-//    }
-//}
-
-dependencies {
-    implementation "org.apache.hugegraph:hugegraph-client:1.7.0"
+repositories {
+    mavenCentral()
 }
