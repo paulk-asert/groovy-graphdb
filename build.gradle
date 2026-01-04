@@ -35,7 +35,7 @@ ext {
 
 
 // ignore non-stable releases
-def UNSTABLE = /^([0-9,.-]+[.-](alpha|beta|rc)[.\d-]*)|20030203.000550$/
+var UNSTABLE = /^([0-9,.-]+[.-](alpha|beta|rc)[.\d-]*|20030203.*|230521-.*|20[12][8901]-.*)$/
 tasks.named("dependencyUpdates").configure {
     gradleReleaseChannel = 'current'
     outputFormatter = 'plain'
