@@ -20,6 +20,8 @@ on:
   push:
     paths:
       - 'h2/**'
+      - '.github/workflows/h2Run.yml'
+      - 'buildSrc/src/main/groovy/groovy-setup.gradle'
 
 permissions:
   contents: read
@@ -41,5 +43,5 @@ jobs:
           check-latest: true
       - uses: gradle/actions/setup-gradle@v5
       - name: Run scripts with Gradle
-        run: ./gradlew h2:runH2S
+        run: ./gradlew h2:run.h2.All
         timeout-minutes: 60

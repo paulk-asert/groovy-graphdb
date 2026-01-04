@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-dependencies {
-    implementation "org.apache.groovy:groovy:$groovyVersion"
-    implementation "org.apache.groovy:groovy-sql:$groovyVersion"
-    implementation "com.h2database:h2:2.3.232"
+plugins {
+    id 'groovy-setup'
 }
 
-FileUtil.baseNames(sourceSets.main.allSource.files).each { name ->
-    tasks.register("run$name", JavaExec) {
-        dependsOn compileGroovy
-        group = 'Application'
-        description = "Run ${name}.groovy as a JVM application/Groovy script"
-        classpath = sourceSets.main.runtimeClasspath
-        mainClass = name
-    }
+dependencies {
+    implementation "org.apache.groovy:groovy-sql:$groovyVersion"
+    implementation 'com.h2database:h2:2.4.240'
 }
