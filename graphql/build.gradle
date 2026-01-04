@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-dependencies {
-    implementation "org.apache.groovy:groovy:$groovyVersion"
-    implementation "com.graphql-java:graphql-java:24.2"
+plugins {
+    id 'groovy-setup'
 }
 
-FileUtil.baseNames(sourceSets.main.allSource.files).each { name ->
-    tasks.register("run$name", JavaExec) {
-        dependsOn compileGroovy
-        group = 'Application'
-        description = "Run ${name}.groovy as a JVM application/Groovy script"
-        classpath = sourceSets.main.runtimeClasspath
-        mainClass = name
-    }
+dependencies {
+    implementation 'com.graphql-java:graphql-java:25.0'
 }
