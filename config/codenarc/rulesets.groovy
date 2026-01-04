@@ -96,6 +96,9 @@ ruleset {
         SpaceAfterComma {
             enabled = false // fooled by emojis
         }
+        SpaceAfterCommentDelimiter {
+            enabled = false
+        }
         SpaceAfterOpeningBrace {
             ignoreEmptyBlock = true
         }
