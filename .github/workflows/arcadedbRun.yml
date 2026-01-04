@@ -20,6 +20,8 @@ on:
   push:
     paths:
       - 'arcadedb/**'
+      - '.github/workflows/arcadedbRun.yml'
+      - 'buildSrc/src/main/groovy/groovy-setup.gradle'
 
 permissions:
   contents: read
@@ -49,5 +51,5 @@ jobs:
           check-latest: true
       - uses: gradle/actions/setup-gradle@v5
       - name: Run scripts with Gradle
-        run: ./gradlew arcadedb:runADS
+        run: ./gradlew arcadedb:run.arcadedb.All
         timeout-minutes: 60

@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+plugins {
+    id 'groovy-setup'
+}
+
 var gremlinVersion = '3.7.5'
 var compat21 = JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)
 var arcadedbVersion = compat21 ? '25.11.1' : '25.3.2'
 
 dependencies {
-    implementation "org.apache.groovy:groovy:$groovyVersion"
     implementation "com.arcadedb:arcadedb-engine:$arcadedbVersion"
     implementation "com.arcadedb:arcadedb-gremlin:$arcadedbVersion"
     implementation "com.arcadedb:arcadedb-network:$arcadedbVersion"
@@ -31,15 +34,4 @@ dependencies {
     implementation "org.apache.tinkerpop:gremlin-groovy:$gremlinVersion"
     implementation "org.opencypher.gremlin:translation:1.0.4"
     runtimeOnly "org.slf4j:slf4j-simple:$slf4jVersion"
-}
-
-FileUtil.baseNames(sourceSets.main.allSource.files, []).each { name ->
-    tasks.register("run$name", JavaExec) {
-        dependsOn compileGroovy
-        group = 'Application'
-        description = "Run ${name}.groovy as a JVM application/Groovy script"
-        jvmArgs(['--add-opens', 'java.base/java.nio.channels.spi=ALL-UNNAMED'])
-        classpath = sourceSets.main.runtimeClasspath
-        mainClass = name
-    }
 }
