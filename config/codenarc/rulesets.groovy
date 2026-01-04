@@ -62,6 +62,9 @@ ruleset {
         ClassJavadoc {
             enabled = false
         }
+        SpaceAfterCommentDelimiter {
+            enabled = false
+        }
     }
     ruleset('rulesets/dry.xml') {
         DuplicateListLiteral {
@@ -95,9 +98,6 @@ ruleset {
         }
         SpaceAfterComma {
             enabled = false // fooled by emojis
-        }
-        SpaceAfterCommentDelimiter {
-            enabled = false
         }
         SpaceAfterOpeningBrace {
             ignoreEmptyBlock = true
