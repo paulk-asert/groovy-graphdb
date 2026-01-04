@@ -47,7 +47,7 @@ jobs:
           distribution: ${{ matrix.dist }}
           java-version: ${{ matrix.java }}
           check-latest: true
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v5
       - name: Run scripts with Gradle
         run: ./gradlew arcadedb:runADS
         timeout-minutes: 60
