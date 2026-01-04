@@ -20,6 +20,8 @@ on:
   push:
     paths:
       - 'orientdb/**'
+      - '.github/workflows/orientdbRun.yml'
+      - 'buildSrc/src/main/groovy/groovy-setup.gradle'
 
 permissions:
   contents: read
