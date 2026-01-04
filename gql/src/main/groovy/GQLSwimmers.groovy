@@ -76,33 +76,35 @@ var schema = DSL.schema {
                 var name = env.arguments.name
                 var at = env.arguments.at
                 var event = env.arguments.event
-                swims.find{ s -> s.who.name == name && s.at == at && s.event == event }
+                swims.find { s -> s.who.name == name && s.at == at && s.event == event }
             }
         }
         field('recordsInFinals') {
             type list(swimType)
             fetcher { DataFetchingEnvironment env ->
-                swims.findAll{ s -> s.event == 'Final' && supersedes.any{ it[0] == s } }
+                swims.findAll { s -> s.event == 'Final' && supersedes.any { it[0] == s } }
             }
         }
         field('recordsInHeats') {
             type list(swimType)
             fetcher { DataFetchingEnvironment env ->
-                swims.findAll{ s -> s.event.startsWith('Heat') &&
-                    (supersedes[0][1] == s || supersedes.any{ it[0] == s }) }
+                swims.findAll { s ->
+                    s.event.startsWith('Heat') &&
+                        (supersedes[0][1] == s || supersedes.any { it[0] == s })
+                }
             }
         }
         field('success') {
             type list(swimmerType)
             argument 'at', GraphQLString
             fetcher { DataFetchingEnvironment env ->
-                swims.findAll{ s -> s.at == env.arguments.at }*.who
+                swims.findAll { s -> s.at == env.arguments.at }*.who
             }
         }
         field('allRecords') {
             type list(swimType)
             fetcher { DataFetchingEnvironment env ->
-                supersedes.collect{it[0] }
+                supersedes.collect { it[0] }
             }
         }
     }
