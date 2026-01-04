@@ -41,5 +41,5 @@ jobs:
           check-latest: true
       - uses: gradle/actions/setup-gradle@v5
       - name: Run scripts with Gradle
-        run: ./gradlew neo4j:runAll
+        run: ./gradlew neo4j:run.neo4j.All
         timeout-minutes: 60

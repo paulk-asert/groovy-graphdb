@@ -14,28 +14,14 @@
  * limitations under the License.
  */
 
-def compat21 = JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)
-def neoVersion = compat21 ? '2025.07.1' : '5.26.10'
+plugins {
+    id 'groovy-setup'
+}
+
+var compat21 = JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)
+var neoVersion = compat21 ? '2025.11.2' : '5.26.19'
 
 dependencies {
     implementation "org.neo4j:neo4j:$neoVersion"
-    implementation "org.apache.groovy:groovy:$groovyVersion"
     implementation 'org.neo4j:neo4j-graphql-java:1.9.1'
-}
-
-def runAll = tasks.register('runAll') {
-    group = 'Application'
-}
-
-FileUtil.baseNames(sourceSets.main.allSource.files).each { name ->
-    def subtask = tasks.register("run$name", JavaExec) {
-        dependsOn compileGroovy
-        group = 'Application'
-        description = "Run ${name}.groovy as a JVM application/Groovy script"
-        classpath = sourceSets.main.runtimeClasspath
-        mainClass = name
-    }
-    runAll.configure {
-        dependsOn subtask
-    }
 }
