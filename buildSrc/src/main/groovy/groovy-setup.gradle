@@ -26,12 +26,6 @@ dependencies {
     implementation "org.apache.groovy:groovy:$groovyVersion"
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
-    }
-}
-
 def runAll = tasks.register("run.${project.name}.All") {
     group = 'Application'
 }
