@@ -33,6 +33,9 @@ ruleset {
         NoDef {
             enabled = false
         }
+        NoDouble {
+            enabled = false
+        }
         TrailingComma {
             enabled = false
         }
