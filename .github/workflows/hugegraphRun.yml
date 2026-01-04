@@ -20,6 +20,8 @@ on:
   push:
     paths:
       - 'hugegraph/**'
+      - '.github/workflows/hugegraphRun.yml'
+      - 'buildSrc/src/main/groovy/groovy-setup.gradle'
 
 permissions:
   contents: read
