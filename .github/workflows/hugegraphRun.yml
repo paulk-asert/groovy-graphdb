@@ -44,5 +44,5 @@ jobs:
           check-latest: true
       - uses: gradle/actions/setup-gradle@v4
       - name: Run scripts with Gradle
-        run: ./gradlew hugegraph:runHGS
+        run: ./gradlew hugegraph:run.hugegraph.All
         timeout-minutes: 60
