@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
+plugins {
+    id 'groovy-setup'
+}
+
 dependencies {
     implementation fileTree(dir: 'lib', include: '*.jar')
     implementation "org.postgresql:postgresql:42.7.7"
     runtimeOnly "org.antlr:antlr4:4.12.0"
-    runtimeOnly "org.apache.commons:commons-text:1.14.0"
-    implementation "org.apache.groovy:groovy:$groovyVersion"
+    runtimeOnly 'org.apache.commons:commons-text:1.15.0'
     implementation "org.apache.groovy:groovy-sql:$groovyVersion"
-}
-
-FileUtil.baseNames(sourceSets.main.allSource.files, []).each { name ->
-    tasks.register("run$name", JavaExec) {
-        dependsOn compileGroovy
-        group = 'Application'
-        description = "Run ${name}.groovy as a JVM application/Groovy script"
-        classpath = sourceSets.main.runtimeClasspath
-        mainClass = name
-    }
 }
