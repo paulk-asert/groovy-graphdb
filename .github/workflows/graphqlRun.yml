@@ -20,6 +20,8 @@ on:
   push:
     paths:
       - 'graphql/**'
+      - '.github/workflows/graphqlRun.yml'
+      - 'buildSrc/src/main/groovy/groovy-setup.gradle'
 
 permissions:
   contents: read
