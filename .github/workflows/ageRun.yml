@@ -20,6 +20,8 @@ on:
   push:
     paths:
       - 'age/**'
+      - '.github/workflows/ageRun.yml'
+      - 'buildSrc/src/main/groovy/groovy-setup.gradle'
 
 permissions:
   contents: read
