@@ -48,14 +48,16 @@ As an example, you can run your own _hugegraph_ server, or use the following doc
 $ docker run -itd --name=graph -p 8080:8080 hugegraph/hugegraph
 ```
 
-To confirm what the GitHub actions use, you can confirm the appropriate settings, e.g. in [hugegraphRun.yml](.github/workflows/hugegraphRun.yml):
+To confirm what the GitHub actions use for CI purposes, you can see the appropriate settings in the related actions file, e.g. in [hugegraphRun.yml](.github/workflows/hugegraphRun.yml):
 
 ```yaml
+...
     services:
       hugegraph:
         image: hugegraph/hugegraph:latest
         ports:
           - 8080:8080
+...
 ```
 
 Likewise, other examples requiring services have similar hints and setup.
