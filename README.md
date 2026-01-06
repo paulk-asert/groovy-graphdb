@@ -28,16 +28,34 @@ The swimming example contains Groovy code for manipulating some selected backstr
 
 ![Swimmers](docs/images/BackstrokeRecords.png)
 
-## Instructions
+## Instructions and setup
 
 All scripts can be run as Gradle tasks. To see available tasks use:
 
-```
+```bash
 $ ./gradlew tasks --group=Application
 ```
 
 Some scripts require database servers to be already running.
 Source files give hints to start such services using docker.
 
-Examine also the respective [GitHub actions](.github/workflows) to see more details of running services with docker
-as well as the script output from running all scripts.
+Examine also the respective [GitHub actions](.github/workflows) to see more details of
+running services with docker as well as the script output from running all scripts.
+
+As an example, you can run your own _hugegraph_ server, or use the following docker command (as per comment in the related [source file](hugegraph/src/main/groovy/HugeGraphSwimmers.groovy)):
+
+```bash
+$ docker run -itd --name=graph -p 8080:8080 hugegraph/hugegraph
+```
+
+To confirm what the GitHub actions use, you can confirm the appropriate settings, e.g. in [hugegraphRun.yml](.github/workflows/hugegraphRun.yml):
+
+```yaml
+    services:
+      hugegraph:
+        image: hugegraph/hugegraph:latest
+        ports:
+          - 8080:8080
+```
+
+Likewise, other examples requiring services have similar hints and setup.
