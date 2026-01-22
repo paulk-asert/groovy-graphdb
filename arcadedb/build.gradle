@@ -18,7 +18,7 @@ plugins {
     id 'groovy-setup'
 }
 
-var gremlinVersion = '3.8.0'
+var gremlinVersion = '3.7.5'
 var compat21 = JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)
 var arcadedbVersion = compat21 ? '25.12.1' : '25.3.2'
 
