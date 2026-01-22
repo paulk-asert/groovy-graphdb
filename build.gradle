@@ -29,10 +29,9 @@ allprojects {
 }
 
 ext {
-    groovyVersion = '5.0.3'
+    groovyVersion = '5.0.4'
     slf4jVersion = '2.0.17'
 }
-
 
 // ignore non-stable releases
 var UNSTABLE = /^([0-9,.-]+[.-](alpha|beta|rc)[.\d-]*|20030203.*|230521-.*|20[12][8901]-.*)$/
