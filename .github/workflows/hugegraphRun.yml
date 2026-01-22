@@ -22,6 +22,7 @@ on:
       - 'hugegraph/**'
       - '.github/workflows/hugegraphRun.yml'
       - 'buildSrc/src/main/groovy/groovy-setup.gradle'
+      - 'build.gradle'
 
 permissions:
   contents: read

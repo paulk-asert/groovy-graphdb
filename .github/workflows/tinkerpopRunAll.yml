@@ -22,6 +22,7 @@ on:
       - 'tinkerpop/**'
       - '.github/workflows/tinkerpopRunAll.yml'
       - 'buildSrc/src/main/groovy/groovy-setup.gradle'
+      - 'build.gradle'
 
 permissions:
   contents: read

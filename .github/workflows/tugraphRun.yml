@@ -20,6 +20,9 @@ on:
   push:
     paths:
       - 'tugraph/**'
+      - '.github/workflows/tugraphRun.yml'
+      - 'buildSrc/src/main/groovy/groovy-setup.gradle'
+      - 'build.gradle'
 
 permissions:
   contents: read
