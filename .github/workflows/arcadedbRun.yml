@@ -50,7 +50,7 @@ jobs:
           distribution: ${{ matrix.dist }}
           java-version: ${{ matrix.java }}
           check-latest: true
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
       - name: Run scripts with Gradle
         run: ./gradlew arcadedb:run.arcadedb.All
         timeout-minutes: 60
